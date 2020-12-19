@@ -1,0 +1,20 @@
+{
+  "generator-cake-addin": {
+    "promptValues": {
+      "projectName": "IntelliJ.Recipe",
+      "repositoryOwner": "nils-a",
+      "projectMaintainer": "nils-a",
+      "author": "Nils Andresen",
+      "description": "Convention based Cake scripts for building IntelliJ plugins.",
+      "licenseType": "MIT",
+      "sourceDir": "./src",
+      "scriptName": "recipe.cake",
+      "enableAllContributors": true,
+      "enableWyam": false,
+      "enableTravis": false,
+      "useTabs": false,
+      "indentSize": 4,
+      "indentYamlSize": 2
+    }
+  }
+}
