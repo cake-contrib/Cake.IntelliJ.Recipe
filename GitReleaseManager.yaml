@@ -5,7 +5,7 @@ create:
     You can download this release from
     [nuget](https://nuget.org/packages/Cake.IntelliJ.Recipe/{milestone}),
     or you can just reference it in a cake build script
-    with `#addin nuget:?package=Cake.IntelliJ.Recipe&version={milestone}`.
+    with `#load nuget:?package=Cake.IntelliJ.Recipe&version={milestone}`.
   footer-includes-milestone: true
   milestone-replace-text: "{milestone}"
 export:

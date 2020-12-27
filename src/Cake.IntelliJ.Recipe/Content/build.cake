@@ -35,17 +35,17 @@ Teardown<BuildVersion>((context, buildVersion) =>
         {
             if (BuildParameters.CanPostToTwitter && BuildParameters.ShouldPostToTwitter)
             {
-                SendMessageToTwitter(string.Format(BuildParameters.TwitterMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToTwitter(string.Format(BuildParameters.TwitterMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanPostToGitter && BuildParameters.ShouldPostToGitter)
             {
-                SendMessageToGitterRoom(string.Format(BuildParameters.GitterMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToGitterRoom(string.Format(BuildParameters.GitterMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanPostToMicrosoftTeams && BuildParameters.ShouldPostToMicrosoftTeams)
             {
-                SendMessageToMicrosoftTeams(string.Format(BuildParameters.MicrosoftTeamsMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToMicrosoftTeams(string.Format(BuildParameters.MicrosoftTeamsMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanSendEmail && BuildParameters.ShouldSendEmail && !string.IsNullOrEmpty(BuildParameters.EmailRecipient))
@@ -147,12 +147,7 @@ BuildParameters.Tasks.BuildTask = Task("Build")
 {
     Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.SemVersion);
 
-    // MODIFY SETTINGS releasenotes
-    Warning("ReleaseNotes are missing!"); // // ReleaseNotes = BuildParameters.ReleaseNotes.Notes.ToArray(), ??
-    Warning(BuildParameters.FullReleaseNotesFilePath);
-
-
-     Gradle
+    Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithTask("build")
         .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")

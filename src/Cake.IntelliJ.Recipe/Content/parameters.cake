@@ -39,12 +39,13 @@ public static class BuildParameters
     public static bool ForceContinuousIntegration { get; private set; }
     public static PlatformFamily PreferredBuildAgentOperatingSystem { get; private set;}
     public static BuildProviderType PreferredBuildProviderType { get; private set; }
+    public static string MarketplaceId { get; private set; }
 
     public static List<PackageSourceData> PackageSources { get; private set; }
 
     public static string StandardMessage
     {
-        get { return "Version {0} of the {1} Addin has just been released, this will be available here https://www.nuget.org/packages/{1}, once package indexing is complete."; }
+        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is revied and approved."; }
     }
 
     public static string GitterMessage
@@ -249,6 +250,7 @@ public static class BuildParameters
         context.Information("EmailRecipient: {0}", EmailRecipient);
         context.Information("EmailSenderName: {0}", EmailSenderName);
         context.Information("EmailSenderAddress: {0}", EmailSenderAddress);
+        context.Information("MarketplaceId: {0}", MarketplaceId);
     }
 
     public static void SetParameters(
@@ -304,7 +306,8 @@ public static class BuildParameters
         DirectoryPath restorePackagesDirectory = null,
         List<PackageSourceData> packageSourceDatas = null,
         PlatformFamily preferredBuildAgentOperatingSystem = PlatformFamily.Windows,
-        BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor
+        BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor,
+        string marketplaceId = null
         )
     {
         if (context == null)
@@ -330,6 +333,7 @@ public static class BuildParameters
         PluginBuildOutputPath = context.MakeAbsolute(pluginBuildOutputPath ?? (sourceDirectoryPath + "/build/libs"));
         PluginPackOutputPath = context.MakeAbsolute(pluginPackOutputPath ?? (sourceDirectoryPath + "/build/distributions"));
         Title = title;
+        MarketplaceId = marketplaceId ?? title; // TODO: this is not a good default..
         RootDirectoryPath = rootDirectoryPath ?? context.MakeAbsolute(context.Environment.WorkingDirectory);
         IntegrationTestScriptPath = integrationTestScriptPath ?? context.MakeAbsolute((FilePath)"test.cake");
         RepositoryOwner = repositoryOwner ?? string.Empty;
@@ -362,8 +366,8 @@ public static class BuildParameters
         ShouldDeleteCachedFiles = shouldDeleteCachedFiles;
         ShouldCalculateVersion = shouldCalculateVersion;
 
-        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("CHANGELOG.md");
-        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("ReleaseNotes.md");
+        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
+        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
 
         NuSpecFilePath = nuspecFilePath ?? context.MakeAbsolute((FilePath)"./Cake.Recipe/Cake.Recipe.nuspec");       
 

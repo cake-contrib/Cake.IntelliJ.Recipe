@@ -19,6 +19,7 @@ public static class Environment
     public static string WyamAccessTokenVariable { get; private set; }
     public static string WyamDeployRemoteVariable { get; private set; }
     public static string WyamDeployBranchVariable { get; private set; }
+    public static string JbMarketplaceTokenVariable { get; private set; }
 
     public static void SetVariableNames(
         string githubTokenVariable = null,
@@ -39,7 +40,8 @@ public static class Environment
         string microsoftTeamsWebHookUrlVariable = null,
         string wyamAccessTokenVariable = null,
         string wyamDeployRemoteVariable = null,
-        string wyamDeployBranchVariable = null)
+        string wyamDeployBranchVariable = null,
+        string jbMarketplaceTokenVariable = null)
     {
         GithubTokenVariable = githubTokenVariable ?? "GITHUB_TOKEN";
         GitterTokenVariable = gitterTokenVariable ?? "GITTER_TOKEN";
@@ -60,5 +62,6 @@ public static class Environment
         WyamAccessTokenVariable = wyamAccessTokenVariable ?? "WYAM_ACCESS_TOKEN";
         WyamDeployRemoteVariable = wyamDeployRemoteVariable ?? "WYAM_DEPLOY_REMOTE";
         WyamDeployBranchVariable = wyamDeployBranchVariable ?? "WYAM_DEPLOY_BRANCH";
+        JbMarketplaceTokenVariable = jbMarketplaceTokenVariable ?? "JB_MARKETPLACE_TOKEN";
     }
 }

@@ -11,6 +11,8 @@ Convention based Cake scripts for building IntelliJ plugins.
 
 - [Install](#install)
 - [Usage](#usage)
+- [Settings](#settings)
+  - [Publishing](#publishing)
 - [Maintainer](#maintainer)
 - [Contributing](#contributing)
   - [Contributors](#contributors)
@@ -25,11 +27,45 @@ Convention based Cake scripts for building IntelliJ plugins.
 ## Usage
 
 ```cs
-#addin nuget:?package=Cake.IntelliJ.Recipe
+#load nuget:?package=Cake.IntelliJ.Recipe
 
-// then what?
+Environment.SetVariableNames();
+
+BuildParameters.SetParameters(
+  context: Context,
+  buildSystem: BuildSystem,
+  sourceDirectoryPath: "./src",
+  title: "Best-Plugin-Ever",
+  repositoryOwner: "nils-a");
+
+BuildParameters.PrintParameters(Context);
+
+ToolSettings.SetToolSettings(context: Context);
+
+Build.Run();
 
 ```
+
+Please be aware, that `Cake.IntelliJ.Recipe` wraps a `gradle` build
+and uses tasks from `org.jetbrains.intellij` gradle plugin.
+It is advised to create the plugin from https://github.com/JetBrains/intellij-platform-plugin-template.
+
+## Settings
+
+### Publishing
+
+To publish the plugin to the [JetBrains Marketplace](https://plugins.jetbrains.com/) a [token](https://plugins.jetbrains.com/author/me/tokens) is required.
+The token must be supplied in an environment variable named `JB_MARKETPLACE_TOKEN`
+
+Also, as with the "normal" gradle-based publishing, the first publish of the plugin must be made manually.
+
+### Marketplace-ID
+
+When publishing is automated, Twitter and Gitter messages can be created. To have them link to the plugin-page in the marketplace,
+a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from the URL in the marketplace, e.g. for `https://plugins.jetbrains.com/plugin/15690-test-rider`, the `marketplaceId` is `15690-test-rider`.
+
+All other settings for Twitter, Gitter and such follow [Cake.Recipe](https://cake-contrib.github.io/Cake.Recipe/docs/fundamentals/environment-variables#twitter).
+
 
 ## Maintainer
 

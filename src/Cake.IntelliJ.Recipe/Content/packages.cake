@@ -58,20 +58,7 @@ BuildParameters.Tasks.PublishPreReleasePackagesTask = Task("Publish-PreRelease-P
     var chocolateySources = BuildParameters.PackageSources.Where(p => p.Type == FeedType.Chocolatey && p.IsRelease == false).ToList();
 
     PushChocolateyPackages(Context, false, chocolateySources);
-
-    if(BuildParameters.ShouldPublishPreReleasePlugin) 
-    {
-        // TODO: This uses the publish configuration from build.gradle.kts - we should somehow supply our own configuration
-        Gradle
-            .FromPath(BuildParameters.SourceDirectoryPath)
-            .WithTask("publishPlugin")
-            .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
-            .Run(); 
-    }
-    else 
-    {
-        Warning("publish of PreRelease plugin is disabled.");
-    }
+    PushPluginToMarketplace(Context, buildVersion, false);
 })
 .OnError(exception =>
 {
@@ -91,13 +78,7 @@ BuildParameters.Tasks.PublishReleasePackagesTask = Task("Publish-Release-Package
     var chocolateySources = BuildParameters.PackageSources.Where(p => p.Type == FeedType.Chocolatey && p.IsRelease == true).ToList();
 
     PushChocolateyPackages(Context, true, chocolateySources);
-
-    // TODO: This uses the publish configuration from build.gradle.kts - we should somehow supply our own configuration
-     Gradle
-        .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithTask("publishPlugin")
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
-        .Run(); 
+    PushPluginToMarketplace(Context, buildVersion, true);
 
     BuildParameters.PublishReleasePackagesWasSuccessful = true;
 })
@@ -108,6 +89,40 @@ BuildParameters.Tasks.PublishReleasePackagesTask = Task("Publish-Release-Package
     publishingError = true;
 });
 
+public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVersion, bool isRelease) 
+{
+    var token = context.EnvironmentVariable(Environment.JbMarketplaceTokenVariable);
+    if(string.IsNullOrEmpty(token)) 
+    {
+        // fallback, for those who did not read the readme: ORG_GRADLE_PROJECT_intellijPublishToken is the default for gradle.
+        token = context.EnvironmentVariable("ORG_GRADLE_PROJECT_intellijPublishToken");
+    }
+
+    if(string.IsNullOrEmpty(token)) 
+    {
+        context.Information("Unable publish to JetBrains Marketplace: No token was set.");
+        return;
+    }
+
+    if(!isRelease && !BuildParameters.ShouldPublishPreReleasePlugin)
+    {
+        context.Information("Publish of PreRelease plugin to JetBrains Marketplace is disabled.");
+        return;
+    }
+
+    var arguments = new[] {
+        $"-PpluginVersion=\"{buildVersion.SemVersion}\"", // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        $"-Dorg.gradle.project.intellijPublishToken={token}" // TODO: verbose logging will write out the token...
+    };
+
+    // TODO: This uses the publish configuration from build.gradle.kts - we should somehow supply our own configuration
+    context.Gradle()
+        .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithTask("publishPlugin")
+        .WithArguments(string.Join(" ", arguments))
+        .Run(); 
+
+}
 
 public void PushChocolateyPackages(ICakeContext context, bool isRelease, List<PackageSourceData> chocolateySources)
 {
