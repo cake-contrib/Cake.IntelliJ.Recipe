@@ -8,7 +8,8 @@ BuildParameters.Tasks.AnalyzeTask = Task("Analyze")
 {
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("detekt")
         .WithTask("ktlintCheck")
         .WithTask("verifyPlugin")
@@ -22,7 +23,8 @@ BuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
 {
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("runPluginVerifier")
         .Run(); 
 });

@@ -62,10 +62,16 @@ Also, as with the "normal" gradle-based publishing, the first publish of the plu
 ### Marketplace-ID
 
 When publishing is automated, Twitter and Gitter messages can be created. To have them link to the plugin-page in the marketplace,
-a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from the URL in the marketplace, e.g. for `https://plugins.jetbrains.com/plugin/15690-test-rider`, the `marketplaceId` is `15690-test-rider`.
+a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from the URL in the marketplace, e.g. for `https://plugins.jetbrains.com/plugin/15698-test-rider`, the `marketplaceId` is `15698`.
 
 All other settings for Twitter, Gitter and such follow [Cake.Recipe](https://cake-contrib.github.io/Cake.Recipe/docs/fundamentals/environment-variables#twitter).
 
+### Grade-Verbosity
+
+The verbosity of running gradle has it's own setting: `gradleVerbosity`. (Default is set to `GradleLogLevel.Default`)
+
+Keep in mind, that while setting Cake verbosity to `diagnostic`, secrets will still be secret (i.e. the `JB_MARKETPLACE_TOKEN` will show as `"[REDACTED]"`)
+setting gradle verbosity to `GradleLogLevel.Debug` will print out all secrets in the logs.
 
 ## Maintainer
 

@@ -40,6 +40,7 @@ public static class BuildParameters
     public static PlatformFamily PreferredBuildAgentOperatingSystem { get; private set;}
     public static BuildProviderType PreferredBuildProviderType { get; private set; }
     public static string MarketplaceId { get; private set; }
+    public static GradleLogLevel GradleVerbosity { get; private set; }
 
     public static List<PackageSourceData> PackageSources { get; private set; }
 
@@ -251,6 +252,7 @@ public static class BuildParameters
         context.Information("EmailSenderName: {0}", EmailSenderName);
         context.Information("EmailSenderAddress: {0}", EmailSenderAddress);
         context.Information("MarketplaceId: {0}", MarketplaceId);
+        context.Information("GradleVerbosity: {0}", Enum.GetName(typeof(GradleLogLevel), GradleVerbosity));
     }
 
     public static void SetParameters(
@@ -307,7 +309,8 @@ public static class BuildParameters
         List<PackageSourceData> packageSourceDatas = null,
         PlatformFamily preferredBuildAgentOperatingSystem = PlatformFamily.Windows,
         BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor,
-        string marketplaceId = null
+        string marketplaceId = null,
+        GradleLogLevel gradleVerbosity = GradleLogLevel.Default
         )
     {
         if (context == null)
@@ -340,6 +343,7 @@ public static class BuildParameters
         RepositoryName = repositoryName ?? Title;
         AppVeyorAccountName = appVeyorAccountName ?? RepositoryOwner.Replace("-", "").ToLower();
         AppVeyorProjectSlug = appVeyorProjectSlug ?? Title.Replace(".", "-").ToLower();
+        GradleVerbosity = gradleVerbosity;
 
         GitterMessage = gitterMessage;
         MicrosoftTeamsMessage = microsoftTeamsMessage;

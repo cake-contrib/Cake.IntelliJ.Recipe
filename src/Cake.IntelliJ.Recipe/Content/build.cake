@@ -129,6 +129,7 @@ BuildParameters.Tasks.CleanTask = Task("Clean")
     CleanDirectories(BuildParameters.Paths.Directories.ToClean);
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("clean")
         .Run(); 
 });
@@ -149,8 +150,9 @@ BuildParameters.Tasks.BuildTask = Task("Build")
 
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("build")
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .Run();
 
     // copy jar to output

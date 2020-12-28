@@ -29,8 +29,9 @@ BuildParameters.Tasks.CreatePluginPackagesTask = Task("Create-Plugin-Packages")
 {
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("buildPlugin")
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .Run(); 
 
     // copy zip to output
@@ -110,16 +111,13 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
         return;
     }
 
-    var arguments = new[] {
-        $"-PpluginVersion=\"{buildVersion.SemVersion}\"", // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
-        $"-Dorg.gradle.project.intellijPublishToken={token}" // TODO: verbose logging will write out the token...
-    };
-
-    // TODO: This uses the publish configuration from build.gradle.kts - we should somehow supply our own configuration
+    // TODO: This uses the publish configuration from build.gradle.kts - should we somehow supply our own configuration?
     context.Gradle()
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithSystemProperty("org.gradle.project.intellijPublishToken", token, true)
         .WithTask("publishPlugin")
-        .WithArguments(string.Join(" ", arguments))
         .Run(); 
 
 }
