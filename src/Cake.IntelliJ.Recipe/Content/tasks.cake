@@ -25,6 +25,7 @@ public class BuildTasks
     public CakeTaskBuilder CreatePluginPackagesTask { get; set; }
     public CakeTaskBuilder PublishPreReleasePackagesTask { get; set; }
     public CakeTaskBuilder PublishReleasePackagesTask { get; set; }
+    public CakeTaskBuilder ForcePublishPlugin { get; set; }
 
     public CakeTaskBuilder TestTask { get; set; }
     public CakeTaskBuilder CleanDocumentationTask { get; set; }

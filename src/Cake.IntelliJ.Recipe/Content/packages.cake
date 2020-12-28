@@ -90,21 +90,15 @@ BuildParameters.Tasks.PublishReleasePackagesTask = Task("Publish-Release-Package
     publishingError = true;
 });
 
+BuildParameters.Tasks.ForcePublishPlugin = Task("Force-Publish-Plugin")
+    .IsDependentOn("Package")
+    .Does<BuildVersion>((context, buildVersion) =>
+{
+    PushPluginToMarketplace(Context, buildVersion, true);
+});
+
 public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVersion, bool isRelease) 
 {
-    var token = context.EnvironmentVariable(Environment.JbMarketplaceTokenVariable);
-    if(string.IsNullOrEmpty(token)) 
-    {
-        // fallback, for those who did not read the readme: ORG_GRADLE_PROJECT_intellijPublishToken is the default for gradle.
-        token = context.EnvironmentVariable("ORG_GRADLE_PROJECT_intellijPublishToken");
-    }
-
-    if(string.IsNullOrEmpty(token)) 
-    {
-        context.Information("Unable publish to JetBrains Marketplace: No token was set.");
-        return;
-    }
-
     if(!isRelease && !BuildParameters.ShouldPublishPreReleasePlugin)
     {
         context.Information("Publish of PreRelease plugin to JetBrains Marketplace is disabled.");
@@ -116,7 +110,6 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
-        .WithSystemProperty("org.gradle.project.intellijPublishToken", token, true)
         .WithTask("publishPlugin")
         .Run(); 
 

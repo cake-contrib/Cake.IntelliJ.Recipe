@@ -55,7 +55,8 @@ It is advised to create the plugin from https://github.com/JetBrains/intellij-pl
 ### Publishing
 
 To publish the plugin to the [JetBrains Marketplace](https://plugins.jetbrains.com/) a [token](https://plugins.jetbrains.com/author/me/tokens) is required.
-The token must be supplied in an environment variable named `JB_MARKETPLACE_TOKEN`
+The token must be supplied in an environment variable and then picked up in the `gradle` build.
+Default for plugins created from https://github.com/JetBrains/intellij-platform-plugin-template is to use the `PUBLISH_TOKEN` variable name.
 
 Also, as with the "normal" gradle-based publishing, the first publish of the plugin must be made manually.
 
@@ -70,8 +71,8 @@ All other settings for Twitter, Gitter and such follow [Cake.Recipe](https://cak
 
 The verbosity of running gradle has it's own setting: `gradleVerbosity`. (Default is set to `GradleLogLevel.Default`)
 
-Keep in mind, that while setting Cake verbosity to `diagnostic`, secrets will still be secret (i.e. the `JB_MARKETPLACE_TOKEN` will show as `"[REDACTED]"`)
-setting gradle verbosity to `GradleLogLevel.Debug` will print out all secrets in the logs.
+Keep in mind, that while setting Cake verbosity to `diagnostic`, secrets will still be secret.
+However, setting gradle verbosity to `GradleLogLevel.Debug` will print out all secrets in the logs.
 
 ## Maintainer
 
