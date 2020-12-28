@@ -279,7 +279,7 @@ public static class BuildParameters
         bool shouldDeleteCachedFiles = false,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
-        bool shouldPublishPreReleasePlugin = true,
+        bool shouldPublishPreReleasePlugin = false, // do NOT push every commit to JB marketplace.
         bool shouldRunChocolatey = true,
         bool shouldPublishGitHub = true,
         bool shouldGenerateDocumentation = true,
