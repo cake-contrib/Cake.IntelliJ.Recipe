@@ -21,7 +21,7 @@ Convention based Cake scripts for building IntelliJ plugins.
 ## Install
 
 ```cs
-#addin nuget:?package=Cake.IntelliJ.Recipe
+#load nuget:?package=Cake.IntelliJ.Recipe
 ```
 
 ## Usage
