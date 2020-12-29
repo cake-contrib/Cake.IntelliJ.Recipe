@@ -113,8 +113,8 @@ Thanks goes to these wonderful people ([emoji key][emoji-key]):
 
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [all-contributorsimage]: https://img.shields.io/github/all-contributors/nils-a/Cake.IntelliJ.Recipe.svg?color=orange&style=flat-square
-[appveyor]: https://ci.appveyor.com/project/nilsa/cake-intellij.recipe
-[appveyorimage]: https://img.shields.io/appveyor/ci/nilsa/cake-intellij.recipe.svg?logo=appveyor&style=flat-square
+[appveyor]: https://ci.appveyor.com/project/nils-a/cake-intellij-recipe
+[appveyorimage]: https://img.shields.io/appveyor/ci/nils-a/cake-intellij-recipe.svg?logo=appveyor&style=flat-square
 [contrib-covenant]: https://www.contributor-covenant.org/version/1/4/code-of-conduct
 [contributing]: CONTRIBUTING.md
 [emoji-key]: https://allcontributors.org/docs/en/emoji-key
