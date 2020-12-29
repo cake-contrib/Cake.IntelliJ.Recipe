@@ -16,7 +16,7 @@ BuildParameters.Tasks.CreateChocolateyPackagesTask = Task("Create-Chocolatey-Pac
 
         // Create package.
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
-            Version = buildVersion.SemVersion,
+            Version = buildVersion.SemVersion, // https://docs.chocolatey.org/en-us/create/create-packages#versioning-recommendations
             OutputDirectory = BuildParameters.Paths.Directories.ChocolateyPackages,
             WorkingDirectory = BuildParameters.Paths.Directories.PublishedApplications
         });
@@ -31,7 +31,7 @@ BuildParameters.Tasks.CreatePluginPackagesTask = Task("Create-Plugin-Packages")
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("buildPlugin")
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .Run(); 
 
     // copy zip to output
@@ -109,7 +109,7 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
     context.Gradle()
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .WithTask("publishPlugin")
         .Run(); 
 

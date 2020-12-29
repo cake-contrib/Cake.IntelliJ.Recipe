@@ -9,7 +9,7 @@ BuildParameters.Tasks.AnalyzeTask = Task("Analyze")
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .WithTask("detekt")
         .WithTask("ktlintCheck")
         .WithTask("verifyPlugin")
@@ -24,7 +24,7 @@ BuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .WithTask("runPluginVerifier")
         .Run(); 
 });

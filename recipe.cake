@@ -41,7 +41,7 @@ Task("Generate-Version-File")
         "%>"
         )
    .WithToken("date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"))
-   .WithToken("version", buildVersion.SemVersion)
+   .WithToken("version", buildVersion.FullSemVersion)
    .WithToken("cakeVersion", context.GetType().Assembly.GetName().Version)
    .ToString();
 
