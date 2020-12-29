@@ -10,7 +10,7 @@ Setup<BuildVersion>(context =>
         });
 
     Information("Building version {0} of " + BuildParameters.Title + " ({1}, {2}) using version {3} of Cake, and version {4} of Cake.Recipe. (IsTagged: {5})",
-        buildVersion.SemVersion,
+        buildVersion.FullSemVersion,
         BuildParameters.Configuration,
         BuildParameters.Target,
         buildVersion.CakeVersion,

@@ -9,7 +9,7 @@ BuildParameters.Tasks.TestTask = Task("Test")
      Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .WithTask("test")
         .Run(); 
 

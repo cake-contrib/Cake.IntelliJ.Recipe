@@ -55,7 +55,7 @@ Teardown<BuildVersion>((context, buildVersion) =>
                 message.AppendLine(string.Format(BuildParameters.StandardMessage, buildVersion.Version, BuildParameters.Title) + "<br/>");
                 message.AppendLine("<br/>");
                 message.AppendLine($"<strong>Name</strong>: {BuildParameters.Title}<br/>");
-                message.AppendLine($"<strong>Version</strong>: {buildVersion.SemVersion}<br/>");
+                message.AppendLine($"<strong>Version</strong>: {buildVersion.FullSemVersion}<br/>");
                 message.AppendLine($"<strong>Configuration</strong>: {BuildParameters.Configuration}<br/>");
                 message.AppendLine($"<strong>Target</strong>: {BuildParameters.Target}<br/>");
                 message.AppendLine($"<strong>Cake version</strong>: {buildVersion.CakeVersion}<br/>");
@@ -146,13 +146,13 @@ BuildParameters.Tasks.BuildTask = Task("Build")
     .IsDependentOn("Export-Release-Notes")
     .Does<BuildVersion>((context, buildVersion) => 
 {
-    Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.SemVersion);
+    Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.FullSemVersion);
 
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("build")
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty("pluginVersion", buildVersion.FullSemVersion)
         .Run();
 
     // copy jar to output
