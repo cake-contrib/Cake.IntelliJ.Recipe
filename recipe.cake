@@ -7,6 +7,7 @@ Environment.SetVariableNames();
 BuildParameters.SetParameters(
     context: Context,
     buildSystem: BuildSystem,
+    masterBranchName: "main",
     sourceDirectoryPath: "./src",
     title: "Cake.IntelliJ.Recipe",
     repositoryName: "Cake.IntelliJ.Recipe", // workaround for https://github.com/cake-contrib/Cake.Recipe/issues/687
