@@ -273,8 +273,8 @@ public static class BuildParameters
         bool shouldPostToTwitter = true,
         bool shouldPostToMicrosoftTeams = false,
         bool shouldSendEmail = true,
-        bool shouldDownloadMilestoneReleaseNotes = true, // so patchPluginXml gradle task will pick this up.
-        bool shouldDownloadFullReleaseNotes = false, 
+        bool shouldDownloadMilestoneReleaseNotes = false,
+        bool shouldDownloadFullReleaseNotes = false,
         bool shouldNotifyBetaReleases = false,
         bool shouldDeleteCachedFiles = false,
         FilePath milestoneReleaseNotesFilePath = null,
