@@ -97,19 +97,36 @@ BuildParameters.Tasks.ForcePublishPlugin = Task("Force-Publish-Plugin")
     PushPluginToMarketplace(Context, buildVersion, true);
 });
 
-public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVersion, bool isRelease) 
+public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVersion, bool isTaggedRelease) 
 {
-    if(!isRelease && !BuildParameters.ShouldPublishPreReleasePlugin)
+    var channel = BuildParameters.PluginCiBuildChannel;
+
+    if(!isTaggedRelease && !BuildParameters.ShouldPublishPluginCiBuilds)
     {
-        context.Information("Publish of PreRelease plugin to JetBrains Marketplace is disabled.");
+        context.Information("Publish of CI-builds to JetBrains Marketplace is disabled.");
         return;
     }
+
+    if(isTaggedRelease) 
+    {
+        if(BuildParameters.BranchType == BranchType.Master) 
+        {
+            channel = BuildParameters.PluginReleaseChannel;
+        } 
+        else 
+        {
+            channel = BuildParameters.PluginPreReleaseChannel;
+        }
+    }
+
+    context.Information("Publishing to channel: {0}", channel);
 
     // TODO: This uses the publish configuration from build.gradle.kts - should we somehow supply our own configuration?
     context.Gradle()
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty(BuildParameters.PluginChannelGradleProperty, channel)
         .WithTask("publishPlugin")
         .Run(); 
 

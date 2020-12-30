@@ -41,6 +41,12 @@ public static class BuildParameters
     public static BuildProviderType PreferredBuildProviderType { get; private set; }
     public static string MarketplaceId { get; private set; }
     public static GradleLogLevel GradleVerbosity { get; private set; }
+    public static string PluginReleaseChannel { get; private set; }
+    public static string PluginPreReleaseChannel { get; private set; }
+    public static string PluginCiBuildChannel { get; private set; }
+    public static bool ShouldPublishPluginCiBuilds { get; private set; }
+    public static string PluginChannelGradleProperty { get; private set; }
+
 
     public static List<PackageSourceData> PackageSources { get; private set; }
 
@@ -102,7 +108,6 @@ public static class BuildParameters
     public static FilePath MilestoneReleaseNotesFilePath { get; private set; }
     public static FilePath FullReleaseNotesFilePath { get; private set; }
 
-    public static bool ShouldPublishPreReleasePlugin { get; private set; }
     public static bool ShouldRunChocolatey { get; private set; }
     public static bool ShouldPublishGitHub { get; private set; }
     public static bool ShouldGenerateDocumentation { get; private set; }
@@ -253,6 +258,11 @@ public static class BuildParameters
         context.Information("EmailSenderAddress: {0}", EmailSenderAddress);
         context.Information("MarketplaceId: {0}", MarketplaceId);
         context.Information("GradleVerbosity: {0}", Enum.GetName(typeof(GradleLogLevel), GradleVerbosity));
+        context.Information("PluginReleaseChannel: {0}", PluginReleaseChannel);
+        context.Information("PluginPreReleaseChannel: {0}", PluginPreReleaseChannel);
+        context.Information("PluginCiBuildChannel: {0}", PluginCiBuildChannel);
+        context.Information("ShouldPublishPluginCiBuilds: {0}", ShouldPublishPluginCiBuilds);
+        context.Information("PluginChannelGradleProperty: {0}", PluginChannelGradleProperty);
     }
 
     public static void SetParameters(
@@ -279,7 +289,11 @@ public static class BuildParameters
         bool shouldDeleteCachedFiles = false,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
-        bool shouldPublishPreReleasePlugin = false, // do NOT push every commit to JB marketplace.
+        string pluginReleaseChannel = "Stable",
+        string pluginPreReleaseChannel = "Beta",
+        string pluginCiBuildChannel = "Alpha",
+        bool shouldPublishPluginCiBuilds = false,
+        string pluginChannelGradleProperty = "marketplaceChannel",
         bool shouldRunChocolatey = true,
         bool shouldPublishGitHub = true,
         bool shouldGenerateDocumentation = true,
@@ -490,7 +504,11 @@ public static class BuildParameters
         SetBuildPaths(BuildPaths.GetPaths(context));
 
         ShouldRunChocolatey = shouldRunChocolatey;
-        ShouldPublishPreReleasePlugin = shouldPublishPreReleasePlugin;
+        PluginReleaseChannel = PluginReleaseChannel;
+        PluginPreReleaseChannel = PluginPreReleaseChannel;
+        PluginCiBuildChannel = PluginCiBuildChannel;
+        ShouldPublishPluginCiBuilds = shouldPublishPluginCiBuilds;
+        PluginChannelGradleProperty = pluginChannelGradleProperty;
 
         ShouldPublishGitHub = (!IsLocalBuild &&
                                 !IsPullRequest &&
