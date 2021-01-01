@@ -81,7 +81,7 @@ See [Releases and PreReleases](#releases-and-prereleases) for their meaning.
 ### Marketplace-ID
 
 When publishing is automated, Twitter and Gitter messages can be created. To have them link to the plugin-page in the marketplace,
-a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from the URL in the marketplace, e.g. for `https://plugins.jetbrains.com/plugin/15698-test-rider`, the `marketplaceId` is `15698`.
+a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from the URL in the marketplace, e.g. for `https://plugins.jetbrains.com/plugin/15698-test-rider`, the `marketplaceId` is `15698-test-rider`.
 
 All other settings for Twitter, Gitter and such follow [Cake.Recipe](https://cake-contrib.github.io/Cake.Recipe/docs/fundamentals/environment-variables#twitter).
 

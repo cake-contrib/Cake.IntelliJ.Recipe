@@ -1,6 +1,6 @@
 #load nuget:?package=Cake.Recipe&version=2.1.0
 
-var standardNotificationMessage = "Version {0} of {1} has just been released, this will be available here https://www.nuget.org/packages/{1}, once package indexing is complete.";
+var standardNotificationMessage = "Version {0} of {1} has just been released, it will be available here https://www.nuget.org/packages/{1}, once package indexing is complete.";
 
 Environment.SetVariableNames();
 
