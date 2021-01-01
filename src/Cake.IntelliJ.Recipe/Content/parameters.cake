@@ -504,9 +504,9 @@ public static class BuildParameters
         SetBuildPaths(BuildPaths.GetPaths(context));
 
         ShouldRunChocolatey = shouldRunChocolatey;
-        PluginReleaseChannel = PluginReleaseChannel;
-        PluginPreReleaseChannel = PluginPreReleaseChannel;
-        PluginCiBuildChannel = PluginCiBuildChannel;
+        PluginReleaseChannel = pluginReleaseChannel;
+        PluginPreReleaseChannel = pluginPreReleaseChannel;
+        PluginCiBuildChannel = pluginCiBuildChannel;
         ShouldPublishPluginCiBuilds = shouldPublishPluginCiBuilds;
         PluginChannelGradleProperty = pluginChannelGradleProperty;
 
