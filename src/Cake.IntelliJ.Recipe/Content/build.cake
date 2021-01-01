@@ -122,6 +122,7 @@ BuildParameters.Tasks.ShowInfoTask = Task("Show-Info")
 BuildParameters.Tasks.CleanTask = Task("Clean")
     .IsDependentOn("Show-Info")
     .IsDependentOn("Print-CI-Provider-Environment-Variables")
+    .IsDependentOn("Print-Java-Environment-Variables")
     .Does(() =>
 {
     Information("Cleaning...");
