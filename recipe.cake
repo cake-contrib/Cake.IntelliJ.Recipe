@@ -1,12 +1,13 @@
 #load nuget:?package=Cake.Recipe&version=2.1.0
 
-var standardNotificationMessage = "Version {0} of {1} has just been released, this will be available here https://www.nuget.org/packages/{1}, once package indexing is complete.";
+var standardNotificationMessage = "Version {0} of {1} has just been released, it will be available here https://www.nuget.org/packages/{1}, once package indexing is complete.";
 
 Environment.SetVariableNames();
 
 BuildParameters.SetParameters(
     context: Context,
     buildSystem: BuildSystem,
+    masterBranchName: "main",
     sourceDirectoryPath: "./src",
     title: "Cake.IntelliJ.Recipe",
     repositoryName: "Cake.IntelliJ.Recipe", // workaround for https://github.com/cake-contrib/Cake.Recipe/issues/687

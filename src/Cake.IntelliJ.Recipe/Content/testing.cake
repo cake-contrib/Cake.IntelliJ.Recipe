@@ -8,7 +8,8 @@ BuildParameters.Tasks.TestTask = Task("Test")
 {
      Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("test")
         .Run(); 
 

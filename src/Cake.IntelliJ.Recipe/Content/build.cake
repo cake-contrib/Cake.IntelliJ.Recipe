@@ -35,17 +35,17 @@ Teardown<BuildVersion>((context, buildVersion) =>
         {
             if (BuildParameters.CanPostToTwitter && BuildParameters.ShouldPostToTwitter)
             {
-                SendMessageToTwitter(string.Format(BuildParameters.TwitterMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToTwitter(string.Format(BuildParameters.TwitterMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanPostToGitter && BuildParameters.ShouldPostToGitter)
             {
-                SendMessageToGitterRoom(string.Format(BuildParameters.GitterMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToGitterRoom(string.Format(BuildParameters.GitterMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanPostToMicrosoftTeams && BuildParameters.ShouldPostToMicrosoftTeams)
             {
-                SendMessageToMicrosoftTeams(string.Format(BuildParameters.MicrosoftTeamsMessage, buildVersion.Version, BuildParameters.Title));
+                SendMessageToMicrosoftTeams(string.Format(BuildParameters.MicrosoftTeamsMessage, buildVersion.Version, BuildParameters.Title, BuildParameters.MarketplaceId));
             }
 
             if (BuildParameters.CanSendEmail && BuildParameters.ShouldSendEmail && !string.IsNullOrEmpty(BuildParameters.EmailRecipient))
@@ -94,6 +94,17 @@ Teardown<BuildVersion>((context, buildVersion) =>
         DeleteFiles(nupkgFiles);
     }
 
+    if (!BuildParameters.IsLocalBuild)
+    {
+        // stop all gradle daemons, or else the Ci might run indefinitely 
+        Information("Stopping gradle daemons...");
+        Gradle
+            .FromPath(BuildParameters.SourceDirectoryPath)
+            .WithLogLevel(BuildParameters.GradleVerbosity)
+            .WithArguments("--stop")
+            .Run(); 
+    }
+
     Information("Finished running tasks.");
 });
 
@@ -122,6 +133,7 @@ BuildParameters.Tasks.ShowInfoTask = Task("Show-Info")
 BuildParameters.Tasks.CleanTask = Task("Clean")
     .IsDependentOn("Show-Info")
     .IsDependentOn("Print-CI-Provider-Environment-Variables")
+    .IsDependentOn("Print-Java-Environment-Variables")
     .Does(() =>
 {
     Information("Cleaning...");
@@ -129,6 +141,7 @@ BuildParameters.Tasks.CleanTask = Task("Clean")
     CleanDirectories(BuildParameters.Paths.Directories.ToClean);
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("clean")
         .Run(); 
 });
@@ -147,15 +160,11 @@ BuildParameters.Tasks.BuildTask = Task("Build")
 {
     Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.SemVersion);
 
-    // MODIFY SETTINGS releasenotes
-    Warning("ReleaseNotes are missing!"); // // ReleaseNotes = BuildParameters.ReleaseNotes.Notes.ToArray(), ??
-    Warning(BuildParameters.FullReleaseNotesFilePath);
-
-
-     Gradle
+    Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
+        .WithLogLevel(BuildParameters.GradleVerbosity)
         .WithTask("build")
-        .WithArguments($"-PpluginVersion=\"{buildVersion.SemVersion}\"") // workaround for cake.gradle implementing WithProperty("pluginVersion", "3.2.1")
+        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .Run();
 
     // copy jar to output

@@ -39,12 +39,20 @@ public static class BuildParameters
     public static bool ForceContinuousIntegration { get; private set; }
     public static PlatformFamily PreferredBuildAgentOperatingSystem { get; private set;}
     public static BuildProviderType PreferredBuildProviderType { get; private set; }
+    public static string MarketplaceId { get; private set; }
+    public static GradleLogLevel GradleVerbosity { get; private set; }
+    public static string PluginReleaseChannel { get; private set; }
+    public static string PluginPreReleaseChannel { get; private set; }
+    public static string PluginCiBuildChannel { get; private set; }
+    public static bool ShouldPublishPluginCiBuilds { get; private set; }
+    public static string PluginChannelGradleProperty { get; private set; }
+
 
     public static List<PackageSourceData> PackageSources { get; private set; }
 
     public static string StandardMessage
     {
-        get { return "Version {0} of the {1} Addin has just been released, this will be available here https://www.nuget.org/packages/{1}, once package indexing is complete."; }
+        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is revied and approved."; }
     }
 
     public static string GitterMessage
@@ -100,7 +108,6 @@ public static class BuildParameters
     public static FilePath MilestoneReleaseNotesFilePath { get; private set; }
     public static FilePath FullReleaseNotesFilePath { get; private set; }
 
-    public static bool ShouldPublishPreReleasePlugin { get; private set; }
     public static bool ShouldRunChocolatey { get; private set; }
     public static bool ShouldPublishGitHub { get; private set; }
     public static bool ShouldGenerateDocumentation { get; private set; }
@@ -249,6 +256,13 @@ public static class BuildParameters
         context.Information("EmailRecipient: {0}", EmailRecipient);
         context.Information("EmailSenderName: {0}", EmailSenderName);
         context.Information("EmailSenderAddress: {0}", EmailSenderAddress);
+        context.Information("MarketplaceId: {0}", MarketplaceId);
+        context.Information("GradleVerbosity: {0}", Enum.GetName(typeof(GradleLogLevel), GradleVerbosity));
+        context.Information("PluginReleaseChannel: {0}", PluginReleaseChannel);
+        context.Information("PluginPreReleaseChannel: {0}", PluginPreReleaseChannel);
+        context.Information("PluginCiBuildChannel: {0}", PluginCiBuildChannel);
+        context.Information("ShouldPublishPluginCiBuilds: {0}", ShouldPublishPluginCiBuilds);
+        context.Information("PluginChannelGradleProperty: {0}", PluginChannelGradleProperty);
     }
 
     public static void SetParameters(
@@ -269,13 +283,17 @@ public static class BuildParameters
         bool shouldPostToTwitter = true,
         bool shouldPostToMicrosoftTeams = false,
         bool shouldSendEmail = true,
-        bool shouldDownloadMilestoneReleaseNotes = true, // so patchPluginXml gradle task will pick this up.
-        bool shouldDownloadFullReleaseNotes = false, 
+        bool shouldDownloadMilestoneReleaseNotes = false,
+        bool shouldDownloadFullReleaseNotes = false,
         bool shouldNotifyBetaReleases = false,
         bool shouldDeleteCachedFiles = false,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
-        bool shouldPublishPreReleasePlugin = true,
+        string pluginReleaseChannel = "Stable",
+        string pluginPreReleaseChannel = "Beta",
+        string pluginCiBuildChannel = "Alpha",
+        bool shouldPublishPluginCiBuilds = false,
+        string pluginChannelGradleProperty = "marketplaceChannel",
         bool shouldRunChocolatey = true,
         bool shouldPublishGitHub = true,
         bool shouldGenerateDocumentation = true,
@@ -304,7 +322,9 @@ public static class BuildParameters
         DirectoryPath restorePackagesDirectory = null,
         List<PackageSourceData> packageSourceDatas = null,
         PlatformFamily preferredBuildAgentOperatingSystem = PlatformFamily.Windows,
-        BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor
+        BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor,
+        string marketplaceId = null,
+        GradleLogLevel gradleVerbosity = GradleLogLevel.Default
         )
     {
         if (context == null)
@@ -330,12 +350,14 @@ public static class BuildParameters
         PluginBuildOutputPath = context.MakeAbsolute(pluginBuildOutputPath ?? (sourceDirectoryPath + "/build/libs"));
         PluginPackOutputPath = context.MakeAbsolute(pluginPackOutputPath ?? (sourceDirectoryPath + "/build/distributions"));
         Title = title;
+        MarketplaceId = marketplaceId ?? title; // TODO: this is not a good default..
         RootDirectoryPath = rootDirectoryPath ?? context.MakeAbsolute(context.Environment.WorkingDirectory);
         IntegrationTestScriptPath = integrationTestScriptPath ?? context.MakeAbsolute((FilePath)"test.cake");
         RepositoryOwner = repositoryOwner ?? string.Empty;
         RepositoryName = repositoryName ?? Title;
         AppVeyorAccountName = appVeyorAccountName ?? RepositoryOwner.Replace("-", "").ToLower();
         AppVeyorProjectSlug = appVeyorProjectSlug ?? Title.Replace(".", "-").ToLower();
+        GradleVerbosity = gradleVerbosity;
 
         GitterMessage = gitterMessage;
         MicrosoftTeamsMessage = microsoftTeamsMessage;
@@ -362,8 +384,8 @@ public static class BuildParameters
         ShouldDeleteCachedFiles = shouldDeleteCachedFiles;
         ShouldCalculateVersion = shouldCalculateVersion;
 
-        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("CHANGELOG.md");
-        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? RootDirectoryPath.CombineWithFilePath("ReleaseNotes.md");
+        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
+        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
 
         NuSpecFilePath = nuspecFilePath ?? context.MakeAbsolute((FilePath)"./Cake.Recipe/Cake.Recipe.nuspec");       
 
@@ -482,7 +504,11 @@ public static class BuildParameters
         SetBuildPaths(BuildPaths.GetPaths(context));
 
         ShouldRunChocolatey = shouldRunChocolatey;
-        ShouldPublishPreReleasePlugin = shouldPublishPreReleasePlugin;
+        PluginReleaseChannel = pluginReleaseChannel;
+        PluginPreReleaseChannel = pluginPreReleaseChannel;
+        PluginCiBuildChannel = pluginCiBuildChannel;
+        ShouldPublishPluginCiBuilds = shouldPublishPluginCiBuilds;
+        PluginChannelGradleProperty = pluginChannelGradleProperty;
 
         ShouldPublishGitHub = (!IsLocalBuild &&
                                 !IsPullRequest &&
