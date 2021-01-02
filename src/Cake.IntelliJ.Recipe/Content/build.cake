@@ -94,6 +94,16 @@ Teardown<BuildVersion>((context, buildVersion) =>
         DeleteFiles(nupkgFiles);
     }
 
+    if (!BuildParameters.IsLocalBuild)
+    {
+        // stop all gradle daemons, or else the Ci might run indefinitely 
+        Gradle
+            .FromPath(BuildParameters.SourceDirectoryPath)
+            .WithLogLevel(BuildParameters.GradleVerbosity)
+            .WithArguments("--stop")
+            .Run(); 
+    }
+
     Information("Finished running tasks.");
 });
 
