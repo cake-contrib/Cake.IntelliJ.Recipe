@@ -97,6 +97,7 @@ Teardown<BuildVersion>((context, buildVersion) =>
     if (!BuildParameters.IsLocalBuild)
     {
         // stop all gradle daemons, or else the Ci might run indefinitely 
+        Information("Stopping gradle daemons...");
         Gradle
             .FromPath(BuildParameters.SourceDirectoryPath)
             .WithLogLevel(BuildParameters.GradleVerbosity)

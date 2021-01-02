@@ -20,6 +20,9 @@ Convention based Cake scripts for building IntelliJ plugins.
   - [Readme](#user-content-readme)
   - [Changelog](#user-content-changelog)
   - [Releases and PreReleases](#releases-and-prereleases)
+- [CI Systems](#ci-systems)
+  - [GitHub Actions](#github-actions)
+  - [AppVeyor](#appveyor)
 - [Maintainer](#maintainer)
 - [Contributing](#contributing)
   - [Contributors](#contributors)
@@ -208,7 +211,7 @@ publishPlugin {
 }
 ```
 
-additonally the line 
+additionally the line 
 ```
 val marketplaceChannel: String by project
 ```
@@ -219,6 +222,91 @@ and also, inside the `gradle.properties` a default has to be supplied:
 marketplaceChannel = development
 ```
 
+## CI Systems
+
+Generally everything from [Cake.Recipe](https://cake-contrib.github.io/Cake.Recipe/docs/ci-systems/) applies here, too.
+There are some modifications to be made to get `gradle` and/or `java` working correctly. Namely:
+- Ensuring a `JAVA_HOME` environment variable that points to the `java` version needed for building of the plugin
+- Caching `~/.gradle/caches` and `~/.gradle/wrapper`
+
+### GitHub Actions
+
+**operating systems**
+
+TODO: Check why building on windows was so slow in the first tests.
+
+**java version**
+
+To set the correct `java` version, use the following:
+
+```
+# Setup Java 1.8 environment which is needed to build
+- name: Setup Java
+  uses: actions/setup-java@v1
+  with:
+    java-version: 1.8
+```
+(Remark: choose `java` version `1.8`, only if version `1.8` is what is needed to build your plugin.)
+
+**gradle**
+
+Additional caching of gradle is advised. 
+Also, (and only on GitHub Actions) the use of the [`Gradle Wrapper Validation Action`](https://github.com/marketplace/actions/gradle-wrapper-validation)
+is advised to ensure only official versions of `graldew` are checked in.
+
+```
+# Validates the gradle wrappers and saves us from getting malicious PRs
+- name: Gradle Wrapper Validation
+  uses: gradle/wrapper-validation-action@v1.0.3
+
+# Cache Gradle dependencies
+- name: Setup Gradle Dependencies Cache
+  uses: actions/cache@v2
+  with:
+    path: ~/.gradle/caches
+    key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', 'gradle.properties') }}
+
+# Cache Gradle Wrapper
+- name: Setup Gradle Wrapper Cache
+  uses: actions/cache@v2
+  with:
+    path: ~/.gradle/wrapper
+    key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+```
+  
+### AppVeyor
+
+**operating systems**
+
+AppVeyor builds on linux currently fail, due to https://github.com/nils-a/Cake.IntelliJ.Recipe/issues/15
+
+**java version**
+
+AppVeyor comes with multiple `java` versions (all based on `openJDK`) preinstalled.
+
+To select between versions on linux, the [`stack` definition](https://www.appveyor.com/docs/getting-started-with-appveyor-for-linux/) can be used
+
+```
+stack: jdk 8
+```
+
+To select between version on Windows, the JAVA_HOME needs to be manually set correctly. The Paths are [documented](https://www.appveyor.com/docs/windows-images-software/#java)
+
+```
+environment:
+  JAVA_HOME="C:\Program Files\Java\jdk1.8.0"
+```
+(Remark: choose `java` version `1.8` (or `8`), only if version `1.8` is what is needed to build your plugin.)
+
+**gradle**
+
+Additional caching of gradle is advised. Keep in mind though, that `gradle` caches can be quite large and that [limitations might apply](https://www.appveyor.com/docs/build-cache/#cache-size-beta)
+
+```
+cache:
+  - '%USERPROFILE%\.gradle\caches -> **\*.gradle, **\*.gradle.kts, gradle.properties'
+  - '%USERPROFILE%\.gradle\wrapper -> **\gradle\wrapper\gradle-wrapper.properties'
+```
 
 ## Maintainer
 
