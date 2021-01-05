@@ -63,6 +63,11 @@ public class LocalBuildRepositoryInfo : IRepositoryInfo
             var rootPath = context.GitFindRootFromPath(context.MakeAbsolute(context.Environment.WorkingDirectory));
 
             var gitTool = context.Tools.Resolve("git");
+                    
+            if (gitTool == null)
+            {
+                gitTool = context.Tools.Resolve("git.exe");
+            }
 
             if (gitTool == null)
             {

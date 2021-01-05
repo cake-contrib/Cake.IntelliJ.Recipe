@@ -16,6 +16,7 @@ BuildParameters.Tasks.PrintJavaEnvironmentVariablesTask = Task("Print-Java-Envir
 
         // java version
         var javaTool = context.Tools.Resolve("java");
+                    
         if (javaTool == null)
         {
             javaTool = context.Tools.Resolve("java.exe");
@@ -23,7 +24,7 @@ BuildParameters.Tasks.PrintJavaEnvironmentVariablesTask = Task("Print-Java-Envir
 
         if (javaTool == null)
         {
-            Warning("Java not found in path!");
+            context.Warning("Java not found in path!");
             return;
         }
 

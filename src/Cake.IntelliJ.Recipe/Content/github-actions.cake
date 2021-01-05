@@ -40,6 +40,11 @@ public class GitHubActionRepositoryInfo : IRepositoryInfo
                 else if (tempName.StartsWith(tagPrefix))
                 {
                     var gitTool = context.Tools.Resolve("git");
+                    
+                    if (gitTool == null)
+                    {
+                        gitTool = context.Tools.Resolve("git.exe");
+                    }
 
                     if (gitTool != null)
                     {
@@ -65,6 +70,10 @@ public class GitHubActionRepositoryInfo : IRepositoryInfo
                                 tempName = lines[0].TrimStart(new []{ ' ', '*' }).Replace("origin/", string.Empty);
                             }
                         }
+                    } 
+                    else
+                    {
+                        context.Warning("git could not be found!");
                     }
                 }
                 else if (tempName.IndexOf('/') >= 0)

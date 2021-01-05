@@ -433,6 +433,11 @@ public static class BuildParameters
         {
             BranchType = BranchType.Unknown;
             var gitTool = context.Tools.Resolve("git");
+                    
+            if (gitTool == null)
+            {
+                gitTool = context.Tools.Resolve("git.exe");
+            }
 
             if (gitTool != null)
             {
@@ -471,6 +476,10 @@ public static class BuildParameters
                         BranchType = BranchType.HotFix;
                     }
                 }
+            }
+            else 
+            {
+                context.Warning("git could not be found!");
             }
         }
         else
