@@ -139,7 +139,7 @@ Be aware, that the description is `html` with all entities encoded. (Something l
 
 The standard template makes use of the `org.jetbrains.changelog` gradle-plugin to keep the `Changelog.md` updated with current version numbers and to copy the latest changes into the `<change-notes>` section of the `plugin.xml` on build.
 
-Currently `Cake.IntellJ.Recipe` does not bridge the gap between release notes in GitHub releases (as preferred and automatically created by `Cake.Recipe`) and having the latest changes shown in the plugin (See [Issue 12](https://github.com/nils-a/Cake.IntelliJ.Recipe/issues/12)).
+Currently `Cake.IntellJ.Recipe` does not bridge the gap between release notes in GitHub releases (as preferred and automatically created by `Cake.Recipe`) and having the latest changes shown in the plugin (See [Issue 12](https://github.com/cake-contrib/Cake.IntelliJ.Recipe/issues/12)).
 
 The suggestion is to place a link to the GitHub releases page inside the `change-notes` of `plugin.xml`.
 
@@ -278,7 +278,7 @@ is advised to ensure only official versions of `graldew` are checked in.
 
 **operating systems**
 
-AppVeyor builds on linux currently fail, due to https://github.com/nils-a/Cake.IntelliJ.Recipe/issues/15
+AppVeyor builds on linux currently fail, due to https://github.com/cake-contrib/Cake.IntelliJ.Recipe/issues/15
 
 **java version**
 
@@ -332,7 +332,7 @@ Thanks goes to these wonderful people ([emoji key][emoji-key]):
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/nils-a"><img src="https://avatars3.githubusercontent.com/u/349188?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nils Andresen</b></sub></a><br /><a href="https://github.com/nils-a/Cake.IntelliJ.Recipe/commits?author=nils-a" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/nils-a"><img src="https://avatars3.githubusercontent.com/u/349188?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nils Andresen</b></sub></a><br /><a href="https://github.com/cake-contrib/Cake.IntelliJ.Recipe/commits?author=nils-a" title="Code">💻</a></td>
   </tr>
 </table>
 
@@ -346,9 +346,9 @@ Thanks goes to these wonderful people ([emoji key][emoji-key]):
 [MIT License © Nils Andresen][license]
 
 [all-contributors]: https://github.com/all-contributors/all-contributors
-[all-contributorsimage]: https://img.shields.io/github/all-contributors/nils-a/Cake.IntelliJ.Recipe.svg?color=orange&style=flat-square
-[appveyor]: https://ci.appveyor.com/project/nils-a/cake-intellij-recipe
-[appveyorimage]: https://img.shields.io/appveyor/ci/nils-a/cake-intellij-recipe.svg?logo=appveyor&style=flat-square
+[all-contributorsimage]: https://img.shields.io/github/all-contributors/cake-contrib/Cake.IntelliJ.Recipe.svg?color=orange&style=flat-square
+[appveyor]: https://ci.appveyor.com/project/cakecontrib/cake-intellij-recipe
+[appveyorimage]: https://img.shields.io/appveyor/ci/cakecontrib/cake-intellij-recipe.svg?logo=appveyor&style=flat-square
 [contrib-covenant]: https://www.contributor-covenant.org/version/1/4/code-of-conduct
 [contributing]: CONTRIBUTING.md
 [emoji-key]: https://allcontributors.org/docs/en/emoji-key

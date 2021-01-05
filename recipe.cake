@@ -11,7 +11,7 @@ BuildParameters.SetParameters(
     sourceDirectoryPath: "./src",
     title: "Cake.IntelliJ.Recipe",
     repositoryName: "Cake.IntelliJ.Recipe", // workaround for https://github.com/cake-contrib/Cake.Recipe/issues/687
-    repositoryOwner: "nils-a",
+    repositoryOwner: "cake-contrib",
     shouldRunInspectCode: false,
     shouldRunDupFinder: false,
     shouldRunIntegrationTests: false,
