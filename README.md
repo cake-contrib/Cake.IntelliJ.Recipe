@@ -11,6 +11,7 @@ Convention based Cake scripts for building IntelliJ plugins.
 
 - [Install](#install)
 - [Usage](#usage)
+- [Discussion](#discussion)
 - [Settings](#settings)
   - [Publishing](#publishing)
   - [Marketplace-ID](#marketplace-id)
@@ -59,6 +60,12 @@ Build.Run();
 Please be aware, that `Cake.IntelliJ.Recipe` wraps a `gradle` build
 and uses tasks from `org.jetbrains.intellij` gradle plugin.
 It is advised to create the plugin from https://github.com/JetBrains/intellij-platform-plugin-template.
+
+## Discussion
+
+If you have questions, search for an existing one, or create a new discussion on the Cake GitHub repository, using the `extension-q-a` category.
+
+[![Join in the discussion on the Cake repository](https://img.shields.io/badge/GitHub-Discussions-green?logo=github)](https://github.com/cake-build/cake/discussions)
 
 ## Settings
 
