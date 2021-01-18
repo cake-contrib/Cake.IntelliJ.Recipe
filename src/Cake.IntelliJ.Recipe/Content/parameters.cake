@@ -52,7 +52,7 @@ public static class BuildParameters
 
     public static string StandardMessage
     {
-        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is revied and approved."; }
+        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is reviewed and approved."; }
     }
 
     public static string GitterMessage
@@ -387,7 +387,7 @@ public static class BuildParameters
         MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
         FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
 
-        NuSpecFilePath = nuspecFilePath ?? context.MakeAbsolute((FilePath)"./Cake.Recipe/Cake.Recipe.nuspec");       
+        NuSpecFilePath = nuspecFilePath ?? context.MakeAbsolute((FilePath)"./Cake.Recipe/Cake.Recipe.nuspec");
 
         RestorePackagesDirectory = restorePackagesDirectory;
 
@@ -433,7 +433,7 @@ public static class BuildParameters
         {
             BranchType = BranchType.Unknown;
             var gitTool = context.Tools.Resolve("git");
-                    
+
             if (gitTool == null)
             {
                 gitTool = context.Tools.Resolve("git.exe");
@@ -477,7 +477,7 @@ public static class BuildParameters
                     }
                 }
             }
-            else 
+            else
             {
                 context.Warning("git could not be found!");
             }
