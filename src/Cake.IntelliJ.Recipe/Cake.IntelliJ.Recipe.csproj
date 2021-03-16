@@ -4,13 +4,6 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
-
-    <ItemGroup>
-        <CakeContribGuidelinesOmitRecommendedReference Include="StyleCop.Analyzers" />
-        <CakeContribGuidelinesOmitRecommendedConfigFile Include="stylecop.json" />
-        <CakeContribGuidelinesOmitRecommendedConfigFile Include=".editorconfig" />
-        <CakeContribGuidelinesOmitTargetFramework Include="net461" />
-    </ItemGroup>
     
     <PropertyGroup>
         <StartYear>2020</StartYear>
@@ -22,17 +15,16 @@
         <Authors>Nils Andresen</Authors>
         <Copyright>Copyright © $(FullYear) — Nils Andresen</Copyright>
         <Description>Convention based Cake scripts for building IntelliJ plugins.</Description>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/cake-contrib/Cake.IntelliJ.Recipe</PackageProjectUrl>
-        <PackageTags>cake;addin;intellij.recipe</PackageTags>
+        <PackageTags>cake;build;cake-build;script;recipe;cake-recipe;cake-contrib;intellij;</PackageTags>
+        <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/cake-contrib/Cake.IntelliJ.Recipe.git</RepositoryUrl>
         <PackageReleaseNotes>https://github.com/cake-contrib/Cake.IntelliJ.Recipe/releases/tag/$(Version)</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CakeContrib.Guidelines" Version="0.5.0">
+        <PackageReference Include="CakeContrib.Guidelines" Version="1.0.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
