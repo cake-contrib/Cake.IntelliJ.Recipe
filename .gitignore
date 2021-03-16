@@ -54,3 +54,4 @@ config.wyam.*
 
 .idea/
 /src/Cake.IntelliJ.Recipe/Content/version.cake
+.history/

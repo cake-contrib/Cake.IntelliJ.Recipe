@@ -264,7 +264,7 @@ is advised to ensure only official versions of `graldew` are checked in.
 ```
 # Validates the gradle wrappers and saves us from getting malicious PRs
 - name: Gradle Wrapper Validation
-  uses: gradle/wrapper-validation-action@v1.0.3
+  uses: gradle/wrapper-validation-action@v1
 
 # Cache Gradle dependencies
 - name: Setup Gradle Dependencies Cache
