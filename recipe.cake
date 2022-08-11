@@ -1,4 +1,4 @@
-#load nuget:?package=Cake.Recipe&version=2.2.1
+#load nuget:?package=Cake.Recipe&version=3.0.1
 
 var standardNotificationMessage = "Version {0} of {1} has just been released, it will be available here https://www.nuget.org/packages/{1}, once package indexing is complete.";
 
@@ -10,10 +10,8 @@ BuildParameters.SetParameters(
     masterBranchName: "main",
     sourceDirectoryPath: "./src",
     title: "Cake.IntelliJ.Recipe",
-    repositoryName: "Cake.IntelliJ.Recipe", // workaround for https://github.com/cake-contrib/Cake.Recipe/issues/687
     repositoryOwner: "cake-contrib",
     shouldRunInspectCode: false,
-    shouldRunDupFinder: false,
     shouldRunIntegrationTests: false,
     shouldRunCoveralls: false,
     shouldRunCodecov: false,
