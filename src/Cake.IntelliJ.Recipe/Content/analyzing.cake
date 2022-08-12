@@ -1,30 +1,32 @@
+// not loading analyzing.cake_ex here.
+
 ///////////////////////////////////////////////////////////////////////////////
 // TASK DEFINITIONS
 ///////////////////////////////////////////////////////////////////////////////
 
-BuildParameters.Tasks.AnalyzeTask = Task("Analyze")
-    .IsDependentOn("Build")
-    .Does<BuildVersion>((context, buildVersion) => 
+BuildParameters.Tasks.AnalyzeTask = Task("IntelliJAnalyze")
+    .IsDependentOn("IntelliJBuild")
+    .Does<BuildVersion>((context, buildVersion) =>
 {
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("detekt")
         .WithTask("ktlintCheck")
         .WithTask("verifyPlugin")
-        .Run(); 
+        .Run();
 });
 
 
-BuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
-    .IsDependentOn("Build")
-    .Does<BuildVersion>((context, buildVersion) => 
+IntelliJBuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
+    .IsDependentOn("IntelliJBuild")
+    .Does<BuildVersion>((context, buildVersion) =>
 {
        Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("runPluginVerifier")
-        .Run(); 
+        .Run();
 });

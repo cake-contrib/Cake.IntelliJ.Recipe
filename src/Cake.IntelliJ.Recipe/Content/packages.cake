@@ -1,50 +1,28 @@
-BuildParameters.Tasks.CreateChocolateyPackagesTask = Task("Create-Chocolatey-Packages")
-    .IsDependentOn("Clean")
-    .WithCriteria(() => BuildParameters.ShouldRunChocolatey, "Skipping because execution of Chocolatey has been disabled")
-    .WithCriteria(() => BuildParameters.BuildAgentOperatingSystem == PlatformFamily.Windows, "Skipping because not running on Windows")
-    .WithCriteria(() => DirectoryExists(BuildParameters.Paths.Directories.ChocolateyNuspecDirectory), "Skipping because Chocolatey nuspec directory is missing")
-    .Does<BuildVersion>((context, buildVersion) =>
-{
-    var nuspecFiles = GetFiles(BuildParameters.Paths.Directories.ChocolateyNuspecDirectory + "/**/*.nuspec");
+// #l ./Cake.Recipe/packages.cake_ex
 
-    EnsureDirectoryExists(BuildParameters.Paths.Directories.ChocolateyPackages);
 
-    foreach (var nuspecFile in nuspecFiles)
-    {
-        // TODO: Add the release notes
-        // ReleaseNotes = BuildParameters.ReleaseNotes.Notes.ToArray(),
-
-        // Create package.
-        ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
-            Version = buildVersion.SemVersion,
-            OutputDirectory = BuildParameters.Paths.Directories.ChocolateyPackages,
-            WorkingDirectory = BuildParameters.Paths.Directories.PublishedApplications
-        });
-    }
-});
-
-BuildParameters.Tasks.CreatePluginPackagesTask = Task("Create-Plugin-Packages")
-    .IsDependentOn("Build")
+IntelliJBuildParameters.Tasks.CreatePluginPackagesTask = Task("Create-Plugin-Packages")
+    .IsDependentOn("IntelliJBuild")
     .Does<BuildVersion>((context, buildVersion) =>
 {
     Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithTask("buildPlugin")
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .Run(); 
 
     // copy zip to output
-    var outputFolder = BuildParameters.Paths.Directories.PluginPackages;
+    var outputFolder = IntelliJBuildParameters.Paths.Directories.PluginPackages;
     EnsureDirectoryExists(outputFolder);
-    var files = GetFiles(BuildParameters.PluginPackOutputPath + "/**/*");
+    var files = GetFiles(IntelliJBuildParameters.PluginPackOutputPath + "/**/*");
     if (files.Any())
     {
         CopyFiles(files, outputFolder, true);
     }
     else
     {
-        Warning("No files were found in the pack output directory: '{0}'", BuildParameters.PluginPackOutputPath);
+        Warning("No files were found in the pack output directory: '{0}'", IntelliJBuildParameters.PluginPackOutputPath);
     }
 });
 
@@ -53,12 +31,9 @@ BuildParameters.Tasks.PublishPreReleasePackagesTask = Task("Publish-PreRelease-P
     .WithCriteria(() => !BuildParameters.IsTagged, "Skipping because current commit is tagged")
     .WithCriteria(() => BuildParameters.PreferredBuildAgentOperatingSystem == BuildParameters.BuildAgentOperatingSystem, "Not running on preferred build agent operating system")
     .WithCriteria(() => BuildParameters.PreferredBuildProviderType == BuildParameters.BuildProvider.Type, "Not running on preferred build provider type")
-    .IsDependentOn("Package")
+    .IsDependentOn("IntelliJPackage")
     .Does<BuildVersion>((context, buildVersion) => 
 {
-    var chocolateySources = BuildParameters.PackageSources.Where(p => p.Type == FeedType.Chocolatey && p.IsRelease == false).ToList();
-
-    PushChocolateyPackages(Context, false, chocolateySources);
     PushPluginToMarketplace(Context, buildVersion, false);
 })
 .OnError(exception =>
@@ -73,12 +48,9 @@ BuildParameters.Tasks.PublishReleasePackagesTask = Task("Publish-Release-Package
     .WithCriteria(() => BuildParameters.IsTagged, "Skipping because current commit is not tagged")
     .WithCriteria(() => BuildParameters.PreferredBuildAgentOperatingSystem == BuildParameters.BuildAgentOperatingSystem, "Not running on preferred build agent operating system")
     .WithCriteria(() => BuildParameters.PreferredBuildProviderType == BuildParameters.BuildProvider.Type, "Not running on preferred build provider type")
-    .IsDependentOn("Package")
+    .IsDependentOn("IntelliJPackage")
     .Does<BuildVersion>((context, buildVersion) =>
 {
-    var chocolateySources = BuildParameters.PackageSources.Where(p => p.Type == FeedType.Chocolatey && p.IsRelease == true).ToList();
-
-    PushChocolateyPackages(Context, true, chocolateySources);
     PushPluginToMarketplace(Context, buildVersion, true);
 
     BuildParameters.PublishReleasePackagesWasSuccessful = true;
@@ -90,8 +62,8 @@ BuildParameters.Tasks.PublishReleasePackagesTask = Task("Publish-Release-Package
     publishingError = true;
 });
 
-BuildParameters.Tasks.ForcePublishPlugin = Task("Force-Publish-Plugin")
-    .IsDependentOn("Package")
+IntelliJBuildParameters.Tasks.ForcePublishPlugin = Task("Force-Publish-Plugin")
+    .IsDependentOn("IntelliJPackage")
     .Does<BuildVersion>((context, buildVersion) =>
 {
     PushPluginToMarketplace(Context, buildVersion, true);
@@ -99,9 +71,9 @@ BuildParameters.Tasks.ForcePublishPlugin = Task("Force-Publish-Plugin")
 
 public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVersion, bool isTaggedRelease) 
 {
-    var channel = BuildParameters.PluginCiBuildChannel;
+    var channel = IntelliJBuildParameters.PluginCiBuildChannel;
 
-    if(!isTaggedRelease && !BuildParameters.ShouldPublishPluginCiBuilds)
+    if(!isTaggedRelease && !IntelliJBuildParameters.ShouldPublishPluginCiBuilds)
     {
         context.Information("Publish of CI-builds to JetBrains Marketplace is disabled.");
         return;
@@ -111,11 +83,11 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
     {
         if(BuildParameters.BranchType == BranchType.Master) 
         {
-            channel = BuildParameters.PluginReleaseChannel;
+            channel = IntelliJBuildParameters.PluginReleaseChannel;
         } 
         else 
         {
-            channel = BuildParameters.PluginPreReleaseChannel;
+            channel = IntelliJBuildParameters.PluginPreReleaseChannel;
         }
     }
 
@@ -124,74 +96,10 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
     // TODO: This uses the publish configuration from build.gradle.kts - should we somehow supply our own configuration?
     context.Gradle()
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
-        .WithProjectProperty(BuildParameters.PluginChannelGradleProperty, channel)
+        .WithProjectProperty(IntelliJBuildParameters.PluginChannelGradleProperty, channel)
         .WithTask("publishPlugin")
         .Run(); 
 
-}
-
-public void PushChocolateyPackages(ICakeContext context, bool isRelease, List<PackageSourceData> chocolateySources)
-{
-    if (BuildParameters.BuildAgentOperatingSystem == PlatformFamily.Windows && DirectoryExists(BuildParameters.Paths.Directories.ChocolateyPackages))
-    {
-        Information("Number of configured {0} Chocolatey Sources: {1}", isRelease ? "Release" : "PreRelease", chocolateySources.Count());
-
-        foreach (var chocolateySource in chocolateySources)
-        {
-            var nupkgFiles = GetFiles(BuildParameters.Paths.Directories.ChocolateyPackages + "/*.nupkg");
-
-            var chocolateyPushSettings = new ChocolateyPushSettings
-                {
-                    Source = chocolateySource.PushUrl
-                };
-
-            var canPushToChocolateySource = false;
-            if (!string.IsNullOrEmpty(chocolateySource.Credentials.ApiKey))
-            {
-                context.Information("Setting ApiKey in Chocolatey Push Settings...");
-                chocolateyPushSettings.ApiKey = chocolateySource.Credentials.ApiKey;
-                canPushToChocolateySource = true;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(chocolateySource.Credentials.User) && !string.IsNullOrEmpty(chocolateySource.Credentials.Password))
-                {
-                    var chocolateySourceSettings = new ChocolateySourcesSettings
-                    {
-                        UserName = chocolateySource.Credentials.User,
-                        Password = chocolateySource.Credentials.Password
-                    };
-
-                    context.Information("Adding Chocolatey source with user/pass...");
-                    context.ChocolateyAddSource(isRelease ? string.Format("ReleaseSource_{0}", chocolateySource.Name) : string.Format("PreReleaseSource_{0}", chocolateySource.Name), chocolateySource.PushUrl, chocolateySourceSettings);
-                    canPushToChocolateySource = true;
-                }
-                else
-                {
-                    context.Warning("User and Password are missing for {0} Chocolatey Source with Url {1}", isRelease ? "Release" : "PreRelease", chocolateySource.PushUrl);
-                }
-            }
-
-            if (canPushToChocolateySource)
-            {
-                foreach (var nupkgFile in nupkgFiles)
-                {
-                    context.Information("Pushing {0} to {1} Source with Url {2}...", nupkgFile, isRelease ? "Release" : "PreRelease", chocolateySource.PushUrl);
-
-                    // Push the package.
-                    context.ChocolateyPush(nupkgFile, chocolateyPushSettings);
-                }
-            }
-            else
-            {
-                context.Warning("Unable to push Chocolatey Packages to {0} Source with Url {1} as necessary credentials haven't been provided.", isRelease ? "Release" : "PreRelease", chocolateySource.PushUrl);
-            }
-        }
-    }
-    else
-    {
-        context.Information("Unable to publish Chocolatey packages. IsRunningOnWindows: {0} Chocolatey Packages Directory Exists: {0}", BuildParameters.BuildAgentOperatingSystem, DirectoryExists(BuildParameters.Paths.Directories.ChocolateyPackages));
-    }
 }

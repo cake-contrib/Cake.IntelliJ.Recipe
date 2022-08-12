@@ -1,14 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-// TASK DEFINITIONS
-///////////////////////////////////////////////////////////////////////////////
+#l ./Cake.Recipe/testing.cake_ex
 
-BuildParameters.Tasks.TestTask = Task("Test")
-    .IsDependentOn("Build")
+BuildParameters.Tasks.TestTask = Task("IntelliJTest")
+    .IsDependentOn("IntelliJBuild")
     .Does<BuildVersion>((context, buildVersion) =>
 {
      Gradle
         .FromPath(BuildParameters.SourceDirectoryPath)
-        .WithLogLevel(BuildParameters.GradleVerbosity)
+        .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
         .WithTask("test")
         .Run(); 
