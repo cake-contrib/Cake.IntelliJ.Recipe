@@ -13,7 +13,7 @@ BuildParameters.SetParameters(
     title: "Cake.IntelliJ.Recipe",
     repositoryOwner: "cake-contrib",
     shouldRunInspectCode: false,
-    shouldRunIntegrationTests: false,
+    shouldRunIntegrationTests: true,
     shouldRunCoveralls: false,
     shouldRunCodecov: false,
     shouldRunDotNetCorePack: true,
