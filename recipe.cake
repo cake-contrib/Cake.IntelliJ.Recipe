@@ -78,9 +78,12 @@ Task("Generate-Version-File")
         public class BuildMetaData
         {
             public static string Date { get; } = ""<%date%>"";
-            public static string Version { get; } = ""<%version%>"";
+            public static string Version { get; } = ""<%cakeRecipeVersion%>"";
             public static string CakeVersion { get; } = ""<%cakeVersion%>"";
-            public static string OriginalCakeRecipeVersion { get; } = ""<%cakeRecipeVersion%>"";
+        }
+        public class IntelliJBuildMetaData
+        {
+            public static string Version { get; } = ""<%version%>"";
         }",
         "<%",
         "%>"
@@ -88,7 +91,7 @@ Task("Generate-Version-File")
    .WithToken("date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"))
    .WithToken("version", buildVersion.SemVersion)
    .WithToken("cakeVersion", context.GetType().Assembly.GetName().Version)
-   .WithToken("cakeRecipeVersion", cakeRecipeVersion.Trim())
+   .WithToken("cakeRecipeVersion", cakeRecipeVersion.Trim().Split(" ")[0])
    .ToString();
 
     System.IO.File.WriteAllText(
