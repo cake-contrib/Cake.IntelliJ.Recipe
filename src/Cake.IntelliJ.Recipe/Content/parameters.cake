@@ -10,6 +10,7 @@ public static class IntelliJBuildParameters
     public static string PluginCiBuildChannel { get; private set; }
     public static bool ShouldPublishPluginCiBuilds { get; private set; }
     public static string PluginChannelGradleProperty { get; private set; } 
+    public static string PluginVersionGradleProperty { get; private set; } 
     public static DirectoryPath PluginBuildOutputPath { get; private set; }
     public static DirectoryPath PluginPackOutputPath { get; private set; }
     public static FilePath IntegrationTestScriptPath { get; private set; }
@@ -36,6 +37,7 @@ public static class IntelliJBuildParameters
         context.Information("PluginCiBuildChannel: {0}", PluginCiBuildChannel);
         context.Information("ShouldPublishPluginCiBuilds: {0}", ShouldPublishPluginCiBuilds);
         context.Information("PluginChannelGradleProperty: {0}", PluginChannelGradleProperty);
+        context.Information("PluginVersionGradleProperty: {0}", PluginVersionGradleProperty);
     }
 
     public static void SetParameters(
@@ -112,6 +114,7 @@ public static class IntelliJBuildParameters
         string pluginCiBuildChannel = "Alpha",
         bool shouldPublishPluginCiBuilds = false,
         string pluginChannelGradleProperty = "marketplaceChannel",
+        string pluginVersionGradleProperty = "pluginVersion",
         string marketplaceId = null,
         GradleLogLevel gradleVerbosity = GradleLogLevel.Default,
         DirectoryPath pluginBuildOutputPath = null,
@@ -222,6 +225,7 @@ public static class IntelliJBuildParameters
         PluginCiBuildChannel = pluginCiBuildChannel;
         ShouldPublishPluginCiBuilds = shouldPublishPluginCiBuilds;
         PluginChannelGradleProperty = pluginChannelGradleProperty;
+        PluginVersionGradleProperty = pluginVersionGradleProperty;
         Paths = IntelliJBuildPaths.GetPaths(context);
     }
 }

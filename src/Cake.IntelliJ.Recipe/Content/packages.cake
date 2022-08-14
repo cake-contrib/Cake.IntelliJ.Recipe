@@ -97,7 +97,7 @@ public void PushPluginToMarketplace(ICakeContext context, BuildVersion buildVers
     context.Gradle()
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
-        .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
+        .WithProjectProperty(IntelliJBuildParameters.PluginVersionGradleProperty, buildVersion.SemVersion)
         .WithProjectProperty(IntelliJBuildParameters.PluginChannelGradleProperty, channel)
         .WithTask("publishPlugin")
         .Run(); 
