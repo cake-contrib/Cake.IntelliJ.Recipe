@@ -2,19 +2,14 @@
 
 public static class IntelliJBuildParameters
 {
+    const string StandardMessage = "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is reviewed and approved.";
     public static string MarketplaceId { get; private set; }
     public static GradleLogLevel GradleVerbosity { get; private set; }
     public static string PluginReleaseChannel { get; private set; }
     public static string PluginPreReleaseChannel { get; private set; }
     public static string PluginCiBuildChannel { get; private set; }
     public static bool ShouldPublishPluginCiBuilds { get; private set; }
-    public static string PluginChannelGradleProperty { get; private set; }
-
-    public static string StandardMessage
-    {
-        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is reviewed and approved."; }
-    }
-    
+    public static string PluginChannelGradleProperty { get; private set; } 
     public static DirectoryPath PluginBuildOutputPath { get; private set; }
     public static DirectoryPath PluginPackOutputPath { get; private set; }
     public static FilePath IntegrationTestScriptPath { get; private set; }
@@ -128,19 +123,24 @@ public static class IntelliJBuildParameters
             throw new ArgumentNullException("context");
         }
 
+        if(string.IsNullOrEmpty(marketplaceId))
+        {
+            marketplaceId = title; // TODO: this is not a good default..
+        }
+
         if(string.IsNullOrEmpty(gitterMessage))
         {
-            gitterMessage = "@/all " + StandardMessage;
+            gitterMessage = "@/all " + StandardMessage.Replace("{2}", marketplaceId);
         }
 
         if(string.IsNullOrEmpty(microsoftTeamsMessage))
         {
-            microsoftTeamsMessage = StandardMessage;
+            microsoftTeamsMessage = StandardMessage.Replace("{2}", marketplaceId);
         }
 
         if(string.IsNullOrEmpty(twitterMessage))
         {
-            twitterMessage = StandardMessage;
+            twitterMessage = StandardMessage.Replace("{2}", marketplaceId);
         }
 
         BuildParameters.SetParameters(
@@ -215,7 +215,7 @@ public static class IntelliJBuildParameters
 
         PluginBuildOutputPath = context.MakeAbsolute(pluginBuildOutputPath ?? (sourceDirectoryPath + "/build/libs"));
         PluginPackOutputPath = context.MakeAbsolute(pluginPackOutputPath ?? (sourceDirectoryPath + "/build/distributions"));
-        MarketplaceId = marketplaceId ?? title; // TODO: this is not a good default..
+        MarketplaceId = marketplaceId; 
         GradleVerbosity = gradleVerbosity;
         PluginReleaseChannel = pluginReleaseChannel;
         PluginPreReleaseChannel = pluginPreReleaseChannel;
