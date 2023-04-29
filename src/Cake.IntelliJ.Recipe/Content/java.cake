@@ -1,4 +1,4 @@
-BuildParameters.Tasks.PrintJavaEnvironmentVariablesTask = Task("Print-Java-Environment-Variables")
+IntelliJBuildParameters.Tasks.PrintJavaEnvironmentVariablesTask = Task("Print-Java-Environment-Variables")
     .Does((context) => {
         var variables = new[] {
             "JAVA_HOME",

@@ -4,7 +4,7 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <StartYear>2020</StartYear>
         <EndYear>$([System.DateTime]::Today.Year)</EndYear>
@@ -33,6 +33,7 @@
 
     <ItemGroup>
         <None Include="$(ProjectDir)../../README.md" Link="README.md" PackagePath="" Pack="true" />
-        <None Include="content/*" PackagePath="/content" Pack="true" />
+        <None Include="content/**/*" PackagePath="/content" Pack="true" />
+        <None Remove="content/Cake.Recipe/.gitignore" />
     </ItemGroup>
 </Project>
