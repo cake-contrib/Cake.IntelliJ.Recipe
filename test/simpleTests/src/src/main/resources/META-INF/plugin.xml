@@ -1,0 +1,13 @@
+<idea-plugin>
+    <id>net.nils-a.test</id>
+    <name>my cool thing</name>
+    <vendor url="https://www.cakebuild.net">cake-build</vendor>
+    <version>1.2.3.4</version>
+    <description>This is the cooles thing ever. And the description must be very long.</description>
+    <idea-version since-build="222" until-build="222.*" />
+
+    <depends>com.intellij.modules.platform</depends>
+  
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+  </idea-plugin>

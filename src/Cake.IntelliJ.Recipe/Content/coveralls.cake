@@ -1,0 +1,1 @@
+#l ./Cake.Recipe/coveralls.cake_ex

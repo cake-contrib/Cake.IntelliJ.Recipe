@@ -4,7 +4,7 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <StartYear>2020</StartYear>
         <EndYear>$([System.DateTime]::Today.Year)</EndYear>
@@ -21,16 +21,19 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/cake-contrib/Cake.IntelliJ.Recipe.git</RepositoryUrl>
         <PackageReleaseNotes>https://github.com/cake-contrib/Cake.IntelliJ.Recipe/releases/tag/$(Version)</PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CakeContrib.Guidelines" Version="1.1.1">
+        <PackageReference Include="CakeContrib.Guidelines" Version="1.4.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="content/*" PackagePath="/content" Pack="true" />
+        <None Include="$(ProjectDir)../../README.md" Link="README.md" PackagePath="" Pack="true" />
+        <None Include="content/**/*" PackagePath="/content" Pack="true" />
+        <None Remove="content/Cake.Recipe/.gitignore" />
     </ItemGroup>
 </Project>

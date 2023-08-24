@@ -1,206 +1,24 @@
-public enum BranchType
-{
-    Unknown,
-    HotFix,
-    Release,
-    Develop,
-    Master
-}
+#l ./Cake.Recipe/parameters.cake_ex
 
-public static class BuildParameters
+public static class IntelliJBuildParameters
 {
-    private static string _gitterMessage;
-    private static string _microsoftTeamsMessage;
-    private static string _twitterMessage;
-
-    public static string Target { get; private set; }
-    public static string Configuration { get; private set; }
-    public static Cake.Core.Configuration.ICakeConfiguration CakeConfiguration { get; private set; }
-    public static bool IsLocalBuild { get; private set; }
-    public static PlatformFamily BuildAgentOperatingSystem => Platform.OperatingSystem;
-    public static BuildPlatform Platform { get; private set; }
-    public static bool IsRunningOnAppVeyor { get; private set; }
-    public static bool IsRunningOnTravisCI { get; private set; }
-    public static bool IsPullRequest { get; private set; }
-    public static bool IsMainRepository { get; private set; }
-    public static bool IsPublicRepository {get; private set; }
-    public static bool IsTagged { get; private set; }
-    public static bool IsPublishBuild { get; private set; }
-    public static bool IsReleaseBuild { get; private set; }
-    public static BranchType BranchType { get; private set; }
-    public static bool PrepareLocalRelease { get; set; }
-    public static bool TreatWarningsAsErrors { get; set; }
-    public static bool PublishReleasePackagesWasSuccessful { get; set; }
-    public static string MasterBranchName { get; private set; }
-    public static string DevelopBranchName { get; private set; }
-    public static string EmailRecipient { get; private set; }
-    public static string EmailSenderName { get; private set; }
-    public static string EmailSenderAddress { get; private set; }
-    public static bool ForceContinuousIntegration { get; private set; }
-    public static PlatformFamily PreferredBuildAgentOperatingSystem { get; private set;}
-    public static BuildProviderType PreferredBuildProviderType { get; private set; }
+    const string StandardMessage = "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is reviewed and approved.";
     public static string MarketplaceId { get; private set; }
     public static GradleLogLevel GradleVerbosity { get; private set; }
     public static string PluginReleaseChannel { get; private set; }
     public static string PluginPreReleaseChannel { get; private set; }
     public static string PluginCiBuildChannel { get; private set; }
     public static bool ShouldPublishPluginCiBuilds { get; private set; }
-    public static string PluginChannelGradleProperty { get; private set; }
-
-
-    public static List<PackageSourceData> PackageSources { get; private set; }
-
-    public static string StandardMessage
-    {
-        get { return "Version {0} of the {1} plugin has just been released, this will be available here https://plugins.jetbrains.com/plugin/{2}, once the version is reviewed and approved."; }
-    }
-
-    public static string GitterMessage
-    {
-        get { return _gitterMessage ?? "@/all " + StandardMessage; }
-        set { _gitterMessage = value; }
-    }
-
-    public static string MicrosoftTeamsMessage
-    {
-        get { return _microsoftTeamsMessage ?? StandardMessage; }
-        set { _microsoftTeamsMessage = value; }
-    }
-
-    public static string TwitterMessage
-    {
-        get { return _twitterMessage ?? StandardMessage; }
-        set { _twitterMessage = value; }
-    }
-
-    public static GitHubCredentials GitHub { get; private set; }
-    public static MicrosoftTeamsCredentials MicrosoftTeams { get; private set; }
-    public static EmailCredentials Email { get; private set; }
-    public static GitterCredentials Gitter { get; private set; }
-    public static SlackCredentials Slack { get; private set; }
-    public static TwitterCredentials Twitter { get; private set; }
-    public static AppVeyorCredentials AppVeyor { get; private set; }
-    public static WyamCredentials Wyam { get; private set; }
-    public static BuildPaths Paths { get; private set; }
-    public static BuildTasks Tasks { get; set; }
-    public static DirectoryPath RootDirectoryPath { get; private set; }
-    public static DirectoryPath SourceDirectoryPath { get; private set; }
+    public static string PluginChannelGradleProperty { get; private set; } 
+    public static string PluginVersionGradleProperty { get; private set; } 
     public static DirectoryPath PluginBuildOutputPath { get; private set; }
     public static DirectoryPath PluginPackOutputPath { get; private set; }
     public static FilePath IntegrationTestScriptPath { get; private set; }
-    public static string Title { get; private set; }
-    public static string RepositoryOwner { get; private set; }
-    public static string RepositoryName { get; private set; }
-    public static string AppVeyorAccountName { get; private set; }
-    public static string AppVeyorProjectSlug { get; private set; }
-
-    public static bool ShouldBuildNugetSourcePackage { get; private set; }
-    public static bool ShouldPostToGitter { get; private set; }
-    public static bool ShouldPostToSlack { get; private set; }
-    public static bool ShouldPostToTwitter { get; private set; }
-    public static bool ShouldPostToMicrosoftTeams { get; private set; }
-    public static bool ShouldSendEmail { get; private set; }
-    public static bool ShouldDownloadMilestoneReleaseNotes { get; private set;}
-    public static bool ShouldDownloadFullReleaseNotes { get; private set;}
-    public static bool ShouldNotifyBetaReleases { get; private set; }
-    public static bool ShouldDeleteCachedFiles { get; private set; }
-
-    public static FilePath MilestoneReleaseNotesFilePath { get; private set; }
-    public static FilePath FullReleaseNotesFilePath { get; private set; }
-
-    public static bool ShouldRunChocolatey { get; private set; }
-    public static bool ShouldPublishGitHub { get; private set; }
-    public static bool ShouldGenerateDocumentation { get; private set; }
-    public static bool ShouldDocumentSourceFiles { get; private set; }
-    public static bool ShouldCalculateVersion { get; private set; }
-
-    public static DirectoryPath WyamRootDirectoryPath { get; private set; }
-    public static DirectoryPath WyamPublishDirectoryPath { get; private set; }
-    public static FilePath WyamConfigurationFile { get; private set; }
-    public static string WyamRecipe { get; private set; }
-    public static string WyamTheme { get; private set; }
-    public static string WyamSourceFiles { get; private set; }
-    public static string WebHost { get; private set; }
-    public static string WebLinkRoot { get; private set; }
-    public static string WebBaseEditUrl { get; private set; }
-
-    public static FilePath NuSpecFilePath { get; private set; }
-
-    public static DirectoryPath RestorePackagesDirectory { get; private set; }
-
-    public static IBuildProvider BuildProvider { get; private set; }
-
-    static BuildParameters()
+    public static IntelliJBuildTasks Tasks { get; private set; }
+    public static IntelliJBuildPaths Paths { get; private set; }
+    static IntelliJBuildParameters()
     {
-        Tasks = new BuildTasks();
-    }
-
-    public static bool CanUseGitReleaseManager
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.GitHub.Token);
-        }
-    }
-
-    public static bool CanSendEmail
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.Email.SmtpHost);
-        }
-    }
-
-    public static bool CanPostToGitter
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.Gitter.Token) &&
-                !string.IsNullOrEmpty(BuildParameters.Gitter.RoomId);
-        }
-    }
-
-    public static bool CanPostToSlack
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.Slack.Token) &&
-                !string.IsNullOrEmpty(BuildParameters.Slack.Channel);
-        }
-    }
-
-    public static bool CanPostToTwitter
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.Twitter.ConsumerKey) &&
-                !string.IsNullOrEmpty(BuildParameters.Twitter.ConsumerSecret) &&
-                !string.IsNullOrEmpty(BuildParameters.Twitter.AccessToken) &&
-                !string.IsNullOrEmpty(BuildParameters.Twitter.AccessTokenSecret);
-        }
-    }
-
-    public static bool CanPostToMicrosoftTeams
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.MicrosoftTeams.WebHookUrl);
-        }
-    }
-
-    public static bool CanUseWyam
-    {
-        get
-        {
-            return !string.IsNullOrEmpty(BuildParameters.Wyam.AccessToken) &&
-                !string.IsNullOrEmpty(BuildParameters.Wyam.DeployRemote) &&
-                !string.IsNullOrEmpty(BuildParameters.Wyam.DeployBranch);
-        }
-    }
-
-    public static void SetBuildPaths(BuildPaths paths)
-    {
-        Paths = paths;
+        Tasks = new IntelliJBuildTasks();
     }
 
     public static void PrintParameters(ICakeContext context)
@@ -210,52 +28,8 @@ public static class BuildParameters
             throw new ArgumentNullException("context");
         }
 
-        context.Information("Printing Build Parameters...");
-        context.Information("IsLocalBuild: {0}", IsLocalBuild);
-        context.Information("IsPullRequest: {0}", IsPullRequest);
-        context.Information("IsMainRepository: {0}", IsMainRepository);
-        context.Information("IsPublicRepository: {0}", IsPublicRepository);
-        context.Information("IsTagged: {0}", IsTagged);
-        context.Information("BranchType: {0}", BranchType);
-        context.Information("TreatWarningsAsErrors: {0}", TreatWarningsAsErrors);
-        context.Information("ShouldSendEmail: {0}", ShouldSendEmail);
-        context.Information("ShouldPostToGitter: {0}", ShouldPostToGitter);
-        context.Information("ShouldPostToSlack: {0}", ShouldPostToSlack);
-        context.Information("ShouldPostToTwitter: {0}", ShouldPostToTwitter);
-        context.Information("ShouldPostToMicrosoftTeams: {0}", ShouldPostToMicrosoftTeams);
-        context.Information("ShouldDownloadFullReleaseNotes: {0}", ShouldDownloadFullReleaseNotes);
-        context.Information("ShouldDownloadMilestoneReleaseNotes: {0}", ShouldDownloadMilestoneReleaseNotes);
-        context.Information("ShouldNotifyBetaReleases: {0}", ShouldNotifyBetaReleases);
-        context.Information("ShouldDeleteCachedFiles: {0}", ShouldDeleteCachedFiles);
-        context.Information("ShouldGenerateDocumentation: {0}", ShouldGenerateDocumentation);
-        context.Information("ShouldDocumentSourceFiles: {0}", ShouldDocumentSourceFiles);
-        context.Information("ShouldCalculateVersion: {0}", ShouldCalculateVersion);
-        context.Information("BuildAgentOperatingSystem: {0}", BuildAgentOperatingSystem);
-        context.Information("IsRunningOnAppVeyor: {0}", IsRunningOnAppVeyor);
-        context.Information("RepositoryOwner: {0}", RepositoryOwner);
-        context.Information("RepositoryName: {0}", RepositoryName);
-        context.Information("PrepareLocalRelease: {0}", PrepareLocalRelease);
-        context.Information("BuildAgentOperatingSystem: {0}", BuildAgentOperatingSystem);
-        context.Information("ForceContinuousIntegration: {0}", ForceContinuousIntegration);
-        context.Information("PreferredBuildAgentOperatingSystem: {0}", PreferredBuildAgentOperatingSystem);
-        context.Information("PreferredBuildProviderType: {0}", PreferredBuildProviderType);
+        BuildParameters.PrintParameters(context);
 
-        context.Information("WyamRootDirectoryPath: {0}", WyamRootDirectoryPath);
-        context.Information("WyamPublishDirectoryPath: {0}", WyamPublishDirectoryPath);
-        context.Information("WyamConfigurationFile: {0}", WyamConfigurationFile);
-        context.Information("WyamRecipe: {0}", WyamRecipe);
-        context.Information("WyamTheme: {0}", WyamTheme);
-        context.Information("WyamSourceFiles: {0}", WyamSourceFiles);
-        context.Information("Wyam Deploy Branch: {0}", Wyam.DeployBranch);
-        context.Information("Wyam Deploy Remote: {0}", Wyam.DeployRemote);
-        context.Information("WebHost: {0}", WebHost);
-        context.Information("WebLinkRoot: {0}", WebLinkRoot);
-        context.Information("WebBaseEditUrl: {0}", WebBaseEditUrl);
-        context.Information("NuSpecFilePath: {0}", NuSpecFilePath);
-        context.Information("RestorePackagesDirectory: {0}", RestorePackagesDirectory);
-        context.Information("EmailRecipient: {0}", EmailRecipient);
-        context.Information("EmailSenderName: {0}", EmailSenderName);
-        context.Information("EmailSenderAddress: {0}", EmailSenderAddress);
         context.Information("MarketplaceId: {0}", MarketplaceId);
         context.Information("GradleVerbosity: {0}", Enum.GetName(typeof(GradleLogLevel), GradleVerbosity));
         context.Information("PluginReleaseChannel: {0}", PluginReleaseChannel);
@@ -263,6 +37,7 @@ public static class BuildParameters
         context.Information("PluginCiBuildChannel: {0}", PluginCiBuildChannel);
         context.Information("ShouldPublishPluginCiBuilds: {0}", ShouldPublishPluginCiBuilds);
         context.Information("PluginChannelGradleProperty: {0}", PluginChannelGradleProperty);
+        context.Information("PluginVersionGradleProperty: {0}", PluginVersionGradleProperty);
     }
 
     public static void SetParameters(
@@ -270,10 +45,12 @@ public static class BuildParameters
         BuildSystem buildSystem,
         DirectoryPath sourceDirectoryPath,
         string title,
+        FilePath solutionFilePath = null,
         DirectoryPath rootDirectoryPath = null,
-        DirectoryPath pluginBuildOutputPath = null,
-        DirectoryPath pluginPackOutputPath = null,
+        DirectoryPath testDirectoryPath = null,
+        string testFilePattern = null,
         string integrationTestScriptPath = null,
+        string resharperSettingsFileName = null,
         string repositoryOwner = null,
         string repositoryName = null,
         string appVeyorAccountName = null,
@@ -287,18 +64,24 @@ public static class BuildParameters
         bool shouldDownloadFullReleaseNotes = false,
         bool shouldNotifyBetaReleases = false,
         bool shouldDeleteCachedFiles = false,
+        bool shouldUseDeterministicBuilds = true,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
-        string pluginReleaseChannel = "Stable",
-        string pluginPreReleaseChannel = "Beta",
-        string pluginCiBuildChannel = "Alpha",
-        bool shouldPublishPluginCiBuilds = false,
-        string pluginChannelGradleProperty = "marketplaceChannel",
-        bool shouldRunChocolatey = true,
-        bool shouldPublishGitHub = true,
+        bool shouldRunChocolatey = false,
+        bool shouldPublishGitHub = false,
         bool shouldGenerateDocumentation = true,
         bool shouldDocumentSourceFiles = true,
+        bool shouldRunInspectCode = false,
+        bool shouldRunCoveralls = false,
+        bool shouldRunCodecov = false,
+        bool shouldRunDotNetCorePack = false,
+        bool shouldBuildNugetSourcePackage = false,
+        bool shouldRunIntegrationTests = false,
         bool shouldCalculateVersion = true,
+        bool? shouldUseTargetFrameworkPath = null,
+        bool? transifexEnabled = null,
+        TransifexMode transifexPullMode = TransifexMode.OnlyTranslated,
+        int transifexPullPercentage = 60,
         string gitterMessage = null,
         string microsoftTeamsMessage = null,
         string twitterMessage = null,
@@ -313,6 +96,8 @@ public static class BuildParameters
         string webBaseEditUrl = null,
         FilePath nuspecFilePath = null,
         bool isPublicRepository = true,
+        FilePath nugetConfig = null,
+        ICollection<string> nuGetSources = null,
         bool treatWarningsAsErrors = true,
         string masterBranchName = "master",
         string developBranchName = "develop",
@@ -323,8 +108,17 @@ public static class BuildParameters
         List<PackageSourceData> packageSourceDatas = null,
         PlatformFamily preferredBuildAgentOperatingSystem = PlatformFamily.Windows,
         BuildProviderType preferredBuildProviderType = BuildProviderType.AppVeyor,
+
+        string pluginReleaseChannel = "Stable",
+        string pluginPreReleaseChannel = "Beta",
+        string pluginCiBuildChannel = "Alpha",
+        bool shouldPublishPluginCiBuilds = false,
+        string pluginChannelGradleProperty = "marketplaceChannel",
+        string pluginVersionGradleProperty = "pluginVersion",
         string marketplaceId = null,
-        GradleLogLevel gradleVerbosity = GradleLogLevel.Default
+        GradleLogLevel gradleVerbosity = GradleLogLevel.Default,
+        DirectoryPath pluginBuildOutputPath = null,
+        DirectoryPath pluginPackOutputPath = null
         )
     {
         if (context == null)
@@ -332,253 +126,106 @@ public static class BuildParameters
             throw new ArgumentNullException("context");
         }
 
-        PreferredBuildAgentOperatingSystem = preferredBuildAgentOperatingSystem;
-        PreferredBuildProviderType = preferredBuildProviderType;
+        if(string.IsNullOrEmpty(marketplaceId))
+        {
+            marketplaceId = title; // TODO: this is not a good default..
+        }
 
-        Platform = BuildPlatform.Create(context);
+        if(string.IsNullOrEmpty(gitterMessage))
+        {
+            gitterMessage = "@/all " + StandardMessage.Replace("{2}", marketplaceId);
+        }
 
-        Platform.CopyLibGit2Binaries("**/netstandard*/**/libgit2*.so", "**/linux-x64/libgit2*.so");
-        Platform.PatchGitLib2ConfigFiles();
+        if(string.IsNullOrEmpty(microsoftTeamsMessage))
+        {
+            microsoftTeamsMessage = StandardMessage.Replace("{2}", marketplaceId);
+        }
 
-        BuildProvider = GetBuildProvider(context, buildSystem);
+        if(string.IsNullOrEmpty(twitterMessage))
+        {
+            twitterMessage = StandardMessage.Replace("{2}", marketplaceId);
+        }
 
-        EmailRecipient = emailRecipient;
-        EmailSenderName = emailSenderName;
-        EmailSenderAddress = emailSenderAddress;
+        BuildParameters.SetParameters(
+            context: context,
+            buildSystem: buildSystem,
+            sourceDirectoryPath: sourceDirectoryPath,
+            title: title,
+            solutionFilePath: solutionFilePath,
+            rootDirectoryPath: rootDirectoryPath,
+            testDirectoryPath: testDirectoryPath,
+            testFilePattern: testFilePattern,
+            integrationTestScriptPath: integrationTestScriptPath,
+            resharperSettingsFileName: resharperSettingsFileName,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            appVeyorAccountName: appVeyorAccountName,
+            appVeyorProjectSlug: appVeyorProjectSlug,
+            shouldPostToGitter: shouldPostToGitter,
+            shouldPostToSlack: shouldPostToSlack,
+            shouldPostToTwitter: shouldPostToTwitter,
+            shouldPostToMicrosoftTeams: shouldPostToMicrosoftTeams,
+            shouldSendEmail: shouldSendEmail,
+            shouldDownloadMilestoneReleaseNotes: shouldDownloadMilestoneReleaseNotes,
+            shouldDownloadFullReleaseNotes: shouldDownloadFullReleaseNotes,
+            shouldNotifyBetaReleases: shouldNotifyBetaReleases,
+            shouldDeleteCachedFiles: shouldDeleteCachedFiles,
+            shouldUseDeterministicBuilds: shouldUseDeterministicBuilds,
+            milestoneReleaseNotesFilePath: milestoneReleaseNotesFilePath,
+            fullReleaseNotesFilePath: fullReleaseNotesFilePath,
+            shouldRunChocolatey: shouldRunChocolatey,
+            shouldPublishGitHub: shouldPublishGitHub,
+            shouldGenerateDocumentation: shouldGenerateDocumentation,
+            shouldDocumentSourceFiles: shouldDocumentSourceFiles,
+            shouldRunInspectCode: shouldRunInspectCode,
+            shouldRunCoveralls: shouldRunCoveralls,
+            shouldRunCodecov: shouldRunCodecov,
+            shouldRunDotNetCorePack: shouldRunDotNetCorePack,
+            shouldBuildNugetSourcePackage: shouldBuildNugetSourcePackage,
+            shouldRunIntegrationTests: shouldRunIntegrationTests,
+            shouldCalculateVersion: shouldCalculateVersion,
+            shouldUseTargetFrameworkPath: shouldUseTargetFrameworkPath,
+            transifexEnabled: transifexEnabled,
+            transifexPullMode: transifexPullMode,
+            transifexPullPercentage: transifexPullPercentage,
+            gitterMessage: gitterMessage,
+            microsoftTeamsMessage: microsoftTeamsMessage,
+            twitterMessage: twitterMessage,
+            wyamRootDirectoryPath: wyamRootDirectoryPath,
+            wyamPublishDirectoryPath: wyamPublishDirectoryPath,
+            wyamConfigurationFile: wyamConfigurationFile,
+            wyamRecipe: wyamRecipe,
+            wyamTheme: wyamTheme,
+            wyamSourceFiles: wyamSourceFiles,
+            webHost: webHost,
+            webLinkRoot: webLinkRoot,
+            webBaseEditUrl: webBaseEditUrl,
+            nuspecFilePath: nuspecFilePath,
+            isPublicRepository: isPublicRepository,
+            nugetConfig: nugetConfig,
+            nuGetSources: nuGetSources,
+            treatWarningsAsErrors: treatWarningsAsErrors,
+            masterBranchName: masterBranchName,
+            developBranchName: developBranchName,
+            emailRecipient: emailRecipient,
+            emailSenderName: emailSenderName,
+            emailSenderAddress: emailSenderAddress,
+            restorePackagesDirectory: restorePackagesDirectory,
+            packageSourceDatas: packageSourceDatas,
+            preferredBuildAgentOperatingSystem: preferredBuildAgentOperatingSystem,
+            preferredBuildProviderType: preferredBuildProviderType
+        );
 
-        SourceDirectoryPath = sourceDirectoryPath;
         PluginBuildOutputPath = context.MakeAbsolute(pluginBuildOutputPath ?? (sourceDirectoryPath + "/build/libs"));
         PluginPackOutputPath = context.MakeAbsolute(pluginPackOutputPath ?? (sourceDirectoryPath + "/build/distributions"));
-        Title = title;
-        MarketplaceId = marketplaceId ?? title; // TODO: this is not a good default..
-        RootDirectoryPath = rootDirectoryPath ?? context.MakeAbsolute(context.Environment.WorkingDirectory);
-        IntegrationTestScriptPath = integrationTestScriptPath ?? context.MakeAbsolute((FilePath)"test.cake");
-        RepositoryOwner = repositoryOwner ?? string.Empty;
-        RepositoryName = repositoryName ?? Title;
-        AppVeyorAccountName = appVeyorAccountName ?? RepositoryOwner.Replace("-", "").ToLower();
-        AppVeyorProjectSlug = appVeyorProjectSlug ?? Title.Replace(".", "-").ToLower();
+        MarketplaceId = marketplaceId; 
         GradleVerbosity = gradleVerbosity;
-
-        GitterMessage = gitterMessage;
-        MicrosoftTeamsMessage = microsoftTeamsMessage;
-        TwitterMessage = twitterMessage;
-
-        WyamRootDirectoryPath = wyamRootDirectoryPath ?? context.MakeAbsolute(context.Directory("docs"));
-        WyamPublishDirectoryPath = wyamPublishDirectoryPath ?? context.MakeAbsolute(context.Directory("BuildArtifacts/temp/_PublishedDocumentation"));
-        WyamConfigurationFile = wyamConfigurationFile ?? context.MakeAbsolute((FilePath)"config.wyam");
-        WyamRecipe = wyamRecipe ?? "Docs";
-        WyamTheme = wyamTheme ?? "Samson";
-        WyamSourceFiles = wyamSourceFiles ?? "../../" + SourceDirectoryPath.FullPath + "/**/{!bin,!obj,!packages,!*.Tests,}/**/*.cs";
-        WebHost = webHost ?? string.Format("{0}.github.io", repositoryOwner);
-        WebLinkRoot = webLinkRoot ?? RepositoryName;
-        WebBaseEditUrl = webBaseEditUrl ?? string.Format("https://github.com/{0}/{1}/tree/{2}/docs/input/", repositoryOwner, title, developBranchName);
-
-        ShouldPostToGitter = shouldPostToGitter;
-        ShouldPostToSlack = shouldPostToSlack;
-        ShouldPostToTwitter = shouldPostToTwitter;
-        ShouldPostToMicrosoftTeams = shouldPostToMicrosoftTeams;
-        ShouldSendEmail = shouldSendEmail;
-        ShouldDownloadFullReleaseNotes = shouldDownloadFullReleaseNotes;
-        ShouldDownloadMilestoneReleaseNotes = shouldDownloadMilestoneReleaseNotes;
-        ShouldNotifyBetaReleases = shouldNotifyBetaReleases;
-        ShouldDeleteCachedFiles = shouldDeleteCachedFiles;
-        ShouldCalculateVersion = shouldCalculateVersion;
-
-        MilestoneReleaseNotesFilePath = milestoneReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
-        FullReleaseNotesFilePath = fullReleaseNotesFilePath ?? SourceDirectoryPath.CombineWithFilePath("CHANGELOG.md");
-
-        NuSpecFilePath = nuspecFilePath ?? context.MakeAbsolute((FilePath)"./Cake.Recipe/Cake.Recipe.nuspec");
-
-        RestorePackagesDirectory = restorePackagesDirectory;
-
-        Target = context.Argument("target", "Default");
-        Configuration = context.Argument("configuration", "Release");
-        PrepareLocalRelease = context.Argument("prepareLocalRelease", false);
-        ForceContinuousIntegration = context.Argument("forceContinuousIntegration", false);
-
-        CakeConfiguration = context.GetConfiguration();
-        MasterBranchName = masterBranchName;
-        DevelopBranchName = developBranchName;
-        // Workaround until bumping to cake 0.37.0+
-        IsLocalBuild = buildSystem.IsLocalBuild && BuildProvider.GetType() != typeof(GitHubActionBuildProvider);
-        IsRunningOnAppVeyor = buildSystem.AppVeyor.IsRunningOnAppVeyor;
-        IsRunningOnTravisCI = buildSystem.IsRunningOnTravisCI;
-        IsPullRequest = BuildProvider.PullRequest.IsPullRequest;
-        IsMainRepository = StringComparer.OrdinalIgnoreCase.Equals(string.Concat(repositoryOwner, "/", RepositoryName), BuildProvider.Repository.Name);
-        IsPublicRepository = isPublicRepository;
-
-        IsTagged = (
-            BuildProvider.Repository.Tag.IsTag &&
-            !string.IsNullOrWhiteSpace(BuildProvider.Repository.Tag.Name)
-        );
-
-        var branchName = BuildProvider.Repository.Branch ?? string.Empty; // This is just to prevent any null reference exceptions
-        if (StringComparer.OrdinalIgnoreCase.Equals(masterBranchName, branchName))
-        {
-            BranchType = BranchType.Master;
-        }
-        else if (StringComparer.OrdinalIgnoreCase.Equals(developBranchName, branchName))
-        {
-            BranchType = BranchType.Develop;
-        }
-        else if (branchName.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-        {
-            BranchType = BranchType.Release;
-        }
-        else if (branchName.StartsWith("hotfix", StringComparison.OrdinalIgnoreCase))
-        {
-            BranchType = BranchType.HotFix;
-        }
-        else if (IsTagged)
-        {
-            BranchType = BranchType.Unknown;
-            var gitTool = context.Tools.Resolve("git");
-
-            if (gitTool == null)
-            {
-                gitTool = context.Tools.Resolve("git.exe");
-            }
-
-            if (gitTool != null)
-            {
-                IEnumerable<string> redirectedStandardOutput;
-                IEnumerable<string> redirectedError;
-
-                var exitCode = context.StartProcess(
-                    gitTool,
-                    new ProcessSettings {
-                        Arguments = "branch --contains HEAD",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                    },
-                    out redirectedStandardOutput,
-                    out redirectedError
-                );
-
-                if (exitCode == 0)
-                {
-                    var lines = redirectedStandardOutput.Select(c => c.TrimStart(new []{ ' ', '*' })).ToList();
-
-                    if (lines.Contains(masterBranchName))
-                    {
-                        BranchType = BranchType.Master;
-                    }
-                    else if (lines.Contains(developBranchName))
-                    {
-                        BranchType = BranchType.Develop;
-                    }
-                    else if (lines.Any(l => l.StartsWith("release", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        BranchType = BranchType.Release;
-                    }
-                    else if (lines.Any(l => l.StartsWith("hotfix", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        BranchType = BranchType.HotFix;
-                    }
-                }
-            }
-            else
-            {
-                context.Warning("git could not be found!");
-            }
-        }
-        else
-        {
-            BranchType = BranchType.Unknown;
-        }
-
-        TreatWarningsAsErrors = treatWarningsAsErrors;
-
-        GitHub = GetGitHubCredentials(context);
-        MicrosoftTeams = GetMicrosoftTeamsCredentials(context);
-        Email = GetEmailCredentials(context);
-        Gitter = GetGitterCredentials(context);
-        Slack = GetSlackCredentials(context);
-        Twitter = GetTwitterCredentials(context);
-        AppVeyor = GetAppVeyorCredentials(context);
-        Wyam = GetWyamCredentials(context);
-        IsPublishBuild = new [] {
-            "Create-Release-Notes"
-        }.Any(
-            releaseTarget => StringComparer.OrdinalIgnoreCase.Equals(releaseTarget, Target)
-        );
-        IsReleaseBuild = new [] {
-            "Publish-PreRelease-Packages",
-            "Publish-Release-Packages",
-            "Publish-GitHub-Release"
-        }.Any(
-            publishTarget => StringComparer.OrdinalIgnoreCase.Equals(publishTarget, Target)
-        );
-
-        SetBuildPaths(BuildPaths.GetPaths(context));
-
-        ShouldRunChocolatey = shouldRunChocolatey;
         PluginReleaseChannel = pluginReleaseChannel;
         PluginPreReleaseChannel = pluginPreReleaseChannel;
         PluginCiBuildChannel = pluginCiBuildChannel;
         ShouldPublishPluginCiBuilds = shouldPublishPluginCiBuilds;
         PluginChannelGradleProperty = pluginChannelGradleProperty;
-
-        ShouldPublishGitHub = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                IsMainRepository &&
-                                (BuildParameters.BranchType == BranchType.Master || BuildParameters.BranchType == BranchType.Release || BuildParameters.BranchType == BranchType.HotFix) &&
-                                IsTagged &&
-                                BuildParameters.PreferredBuildAgentOperatingSystem == BuildParameters.BuildAgentOperatingSystem &&
-                                BuildParameters.PreferredBuildProviderType == BuildParameters.BuildProvider.Type &&
-                                shouldPublishGitHub);
-
-        ShouldGenerateDocumentation = (!IsLocalBuild &&
-                                !IsPullRequest &&
-                                IsMainRepository &&
-                                (BuildParameters.BranchType == BranchType.Master || BuildParameters.BranchType == BranchType.Develop) &&
-                                BuildParameters.PreferredBuildAgentOperatingSystem == BuildParameters.BuildAgentOperatingSystem &&
-                                BuildParameters.PreferredBuildProviderType == BuildParameters.BuildProvider.Type &&
-                                shouldGenerateDocumentation);
-
-        ShouldDocumentSourceFiles = shouldDocumentSourceFiles;
-
-        if (packageSourceDatas?.Any() ?? false)
-        {
-            PackageSources = packageSourceDatas;
-        }
-        else
-        {
-            PackageSources = new List<PackageSourceData>();
-
-            // Try to get the deprecated way of doing things, set them as default sources
-            var myGetUrl = context.EnvironmentVariable("MYGET_SOURCE");
-            if (!string.IsNullOrEmpty(myGetUrl))
-            {
-                PackageSources.Add(new PackageSourceData(context, "MYGET", myGetUrl, FeedType.NuGet, false));
-                PackageSources.Add(new PackageSourceData(context, "MYGET", myGetUrl, FeedType.Chocolatey, false));
-            }
-
-            var nuGetUrl = context.EnvironmentVariable("NUGET_SOURCE");
-            if (!string.IsNullOrEmpty(nuGetUrl))
-            {
-                PackageSources.Add(new PackageSourceData(context, "NUGET", nuGetUrl));
-            }
-
-            var chocolateyUrl = context.EnvironmentVariable("CHOCOLATEY_SOURCE");
-            if (!string.IsNullOrEmpty(chocolateyUrl))
-            {
-                PackageSources.Add(new PackageSourceData(context, "CHOCOLATEY", chocolateyUrl, FeedType.Chocolatey));
-            }
-
-            // The following aren't deprecated sources, but rather suggested defaults going forward, so check
-            // for the environment variables being set, if they are, add them to the list
-            var azureUrl = context.EnvironmentVariable("AZURE_SOURCE");
-            if (!string.IsNullOrEmpty(azureUrl))
-            {
-                PackageSources.Add(new PackageSourceData(context, "AZURE", azureUrl, FeedType.NuGet, false));
-            }
-
-            var gprUrl = context.EnvironmentVariable("GPR_SOURCE");
-            if(!string.IsNullOrEmpty(gprUrl))
-            {
-                PackageSources.Add(new PackageSourceData(context, "GPR", gprUrl, FeedType.NuGet, false));
-            }
-        }
+        PluginVersionGradleProperty = pluginVersionGradleProperty;
+        Paths = IntelliJBuildPaths.GetPaths(context);
     }
 }
