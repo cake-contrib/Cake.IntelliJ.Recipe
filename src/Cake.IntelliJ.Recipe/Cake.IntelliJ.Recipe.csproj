@@ -33,7 +33,7 @@
 
     <ItemGroup>
         <None Include="$(ProjectDir)../../README.md" Link="README.md" PackagePath="" Pack="true" />
-        <None Include="content/**/*" PackagePath="/content" Pack="true" />
-        <None Remove="content/Cake.Recipe/.gitignore" />
+        <None Include="Content/**/*" PackagePath="/content" Pack="true" />
+        <None Remove="Content/Cake.Recipe/.gitignore" />
     </ItemGroup>
 </Project>
