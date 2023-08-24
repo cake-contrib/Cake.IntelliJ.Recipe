@@ -18,7 +18,9 @@ BuildParameters.SetParameters(
     shouldRunCodecov: false,
     shouldRunDotNetCorePack: true,
     gitterMessage: "@/all " + standardNotificationMessage,
-    twitterMessage: standardNotificationMessage);
+    twitterMessage: standardNotificationMessage,
+    preferredBuildProviderType: BuildProviderType.GitHubActions,
+    preferredBuildAgentOperatingSystem: PlatformFamily.Linux);
 
 BuildParameters.PrintParameters(Context);
 
@@ -29,7 +31,7 @@ BuildParameters.Tasks.CleanTask
     .IsDependentOn("Copy-Cake-Recipe-Content");
 
 Task("Copy-Cake-Recipe-Content")
-.Does(() => 
+.Does(() =>
 {
     var src = Directory("./lib/Cake.Recipe/Source/Cake.Recipe/Content");
     var dst = Directory("./src/Cake.IntelliJ.Recipe/Content/Cake.Recipe");
@@ -44,10 +46,10 @@ Task("Copy-Cake-Recipe-Content")
         CopyFile(file, dst + File(newName));
 
         var fileHere = (here + File(name)).Path;
-        if(!FileExists(fileHere)) 
+        if(!FileExists(fileHere))
         {
             Warning("Creating new file from Cake.Recipe: "+name);
-            FileWriteText(fileHere, "#l ./Cake.Recipe/"+newName);   
+            FileWriteText(fileHere, "#l ./Cake.Recipe/"+newName);
         }
     }
 });
