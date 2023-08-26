@@ -40,7 +40,6 @@ BuildParameters.Tasks.RestoreTask.WithCriteria(false, "IntelliJ");
 BuildParameters.Tasks.BuildTask.WithCriteria(false, "IntelliJ").IsDependentOn("IntelliJBuild");
 BuildParameters.Tasks.BuildTask = Task("IntelliJBuild")
     .IsDependentOn("IntelliJClean")
-    .IsDependentOn("Export-Release-Notes")
     .Does<BuildVersion>((context, buildVersion) =>
 {
     Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.SemVersion);
