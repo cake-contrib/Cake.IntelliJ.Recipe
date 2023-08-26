@@ -1,4 +1,12 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["github>cake-contrib/renovate-presets"]
+    "extends": ["github>cake-contrib/renovate-presets"],
+    "packageRules": [
+        {
+            "description": "Do not update cake references inside the actual Cake.IntelliJ.Recipe",
+            "matchFileNames": ["**/Cake.IntelliJ.Recipe/Content/**/*"],
+            "matchManagers": ["cake"],
+            "enabled": false
+        }
+    ]
 }
