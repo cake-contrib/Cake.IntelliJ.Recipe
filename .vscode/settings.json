@@ -1,0 +1,10 @@
+{
+    "search.exclude": {
+        "lib/Cake.Recipe": true
+    },
+    "files.exclude": {
+        "**/.cake/": true,
+        "**/.history/": true,
+        "**/.idea/": true
+    }
+}
