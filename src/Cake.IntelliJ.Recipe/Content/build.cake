@@ -8,13 +8,13 @@ Teardown((context) =>
 {
     if (!BuildParameters.IsLocalBuild)
     {
-        // stop all gradle daemons, or else the Ci might run indefinitely 
+        // stop all gradle daemons, or else the Ci might run indefinitely
         Information("Stopping gradle daemons...");
         Gradle
             .FromPath(BuildParameters.SourceDirectoryPath)
             .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
             .WithArguments("--stop")
-            .Run(); 
+            .Run();
     }
 });
 
@@ -32,7 +32,7 @@ Task("IntelliJClean")
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithTask("clean")
-        .Run(); 
+        .Run();
 });
 
 BuildParameters.Tasks.RestoreTask.WithCriteria(false, "IntelliJ");
@@ -41,7 +41,7 @@ BuildParameters.Tasks.BuildTask.WithCriteria(false, "IntelliJ").IsDependentOn("I
 BuildParameters.Tasks.BuildTask = Task("IntelliJBuild")
     .IsDependentOn("IntelliJClean")
     .IsDependentOn("Export-Release-Notes")
-    .Does<BuildVersion>((context, buildVersion) => 
+    .Does<BuildVersion>((context, buildVersion) =>
 {
     Information("Building {0} for version {1}", BuildParameters.SourceDirectoryPath, buildVersion.SemVersion);
 
@@ -95,14 +95,17 @@ public class IntelliJBuilder
         _action = action;
     }
 
-    public void Run()
+    public void Run(bool useNetCoreTools = true)
     {
+        BuildParameters.IsDotNetCoreBuild = useNetCoreTools;
+        BuildParameters.IsNuGetBuild = false;
+
         SetupTasks();
 
         _action(BuildParameters.Target);
     }
 
-    
+
     private static void SetupTasks()
     {
         BuildParameters.Tasks.PackageTask.IsDependentOn("IntelliJAnalyze");

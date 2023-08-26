@@ -17,9 +17,9 @@ public class IntelliJBuildPaths
         var pluginPackagesOutputDirectory = basePaths.Directories.Packages + "/Plugin";
 
         var buildDirectories = new IntelliJBuildDirectories(
-            backupBuildXmlDirectory,
-            pluginPackagesOutputDirectory
-            );
+            pluginPackagesOutputDirectory,
+            backupBuildXmlDirectory
+        );
 
 
         return new IntelliJBuildPaths
