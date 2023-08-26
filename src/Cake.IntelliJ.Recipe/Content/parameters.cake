@@ -9,8 +9,8 @@ public static class IntelliJBuildParameters
     public static string PluginPreReleaseChannel { get; private set; }
     public static string PluginCiBuildChannel { get; private set; }
     public static bool ShouldPublishPluginCiBuilds { get; private set; }
-    public static string PluginChannelGradleProperty { get; private set; } 
-    public static string PluginVersionGradleProperty { get; private set; } 
+    public static string PluginChannelGradleProperty { get; private set; }
+    public static string PluginVersionGradleProperty { get; private set; }
     public static DirectoryPath PluginBuildOutputPath { get; private set; }
     public static DirectoryPath PluginPackOutputPath { get; private set; }
     public static FilePath IntegrationTestScriptPath { get; private set; }
@@ -67,8 +67,8 @@ public static class IntelliJBuildParameters
         bool shouldUseDeterministicBuilds = true,
         FilePath milestoneReleaseNotesFilePath = null,
         FilePath fullReleaseNotesFilePath = null,
-        bool shouldRunChocolatey = false,
-        bool shouldPublishGitHub = false,
+        bool shouldRunChocolatey = true,
+        bool shouldPublishGitHub = true,
         bool shouldGenerateDocumentation = true,
         bool shouldDocumentSourceFiles = true,
         bool shouldRunInspectCode = false,
@@ -218,7 +218,7 @@ public static class IntelliJBuildParameters
 
         PluginBuildOutputPath = context.MakeAbsolute(pluginBuildOutputPath ?? (sourceDirectoryPath + "/build/libs"));
         PluginPackOutputPath = context.MakeAbsolute(pluginPackOutputPath ?? (sourceDirectoryPath + "/build/distributions"));
-        MarketplaceId = marketplaceId; 
+        MarketplaceId = marketplaceId;
         GradleVerbosity = gradleVerbosity;
         PluginReleaseChannel = pluginReleaseChannel;
         PluginPreReleaseChannel = pluginPreReleaseChannel;
