@@ -42,18 +42,18 @@ Convention based Cake scripts for building IntelliJ plugins.
 
 Environment.SetVariableNames();
 
-BuildParameters.SetParameters(
+IntelliJBuildParameters.SetParameters(
   context: Context,
   buildSystem: BuildSystem,
   sourceDirectoryPath: "./src",
   title: "Best-Plugin-Ever",
   repositoryOwner: "nils-a");
 
-BuildParameters.PrintParameters(Context);
+IntelliJBuildParameters.PrintParameters(Context);
 
 ToolSettings.SetToolSettings(context: Context);
 
-Build.Run();
+IntelliJBuild.Run();
 
 ```
 
@@ -104,7 +104,7 @@ However, setting gradle verbosity to `GradleLogLevel.Debug` will print out all s
 
 ## Changes to the template
 
-When creating a new recipe for a plugin that was created from https://github.com/JetBrains/intellij-platform-plugin-template 
+When creating a new recipe for a plugin that was created from https://github.com/JetBrains/intellij-platform-plugin-template
 the following changes have to be made:
 
 ### Readme
@@ -139,7 +139,7 @@ This should point to the new location of the `Readme.md`, e.g.:
 // ...
 ```
 
-*Alternatively, the whole code-block could be removed from `build.gradle.kts` and a `<description>` manually added to the `plugin.xml`. 
+*Alternatively, the whole code-block could be removed from `build.gradle.kts` and a `<description>` manually added to the `plugin.xml`.
 Be aware, that the description is `html` with all entities encoded. (Something like `<description>&lt;h3&gt;This is the plugin!&lt;/h3&gt;</description>`).*
 
 ### Changelog
@@ -167,13 +167,13 @@ and in `publishPlugin`:
 dependsOn("patchChangelog")
 ```
 
-And the `change-notes` in `plugin.xml` have to be added manually. Something like 
+And the `change-notes` in `plugin.xml` have to be added manually. Something like
 
 ```xml
 <change-notes>
   &lt;a href="https://github.com/nils-a/test-rider/releases"&gt;&lt;h3&gt;See GitHub Releases&lt;/h3&gt;&lt;/a&gt;
 </change-notes>
-``` 
+```
 
 is suggested.
 
@@ -193,13 +193,13 @@ The Marketplace however does have the notions of ["channels"](https://plugins.je
 - `pluginPreReleaseChannel` (default `"Beta"`) as the name of the channel to publish tagged preReleases to.
 - `pluginCiBuildChannel` (default `"Alpha"`) as the name of the channel to publish CI-builds to.
 
-Be aware, that publishes to JetBrains marketplace are moderated so they will not be available to the public instantaneously. 
+Be aware, that publishes to JetBrains marketplace are moderated so they will not be available to the public instantaneously.
 Also, for the very same reason publishing CI builds is deactivated in the defaults. Use `shouldPublishPluginCiBuilds` (default `false`) to enable it.
 
-To make this work, `Cake.IntelliJ.Recipe` will pass the selected channel to gradle via a project property. 
+To make this work, `Cake.IntelliJ.Recipe` will pass the selected channel to gradle via a project property.
 The name of that property is set in `pluginChannelGradleProperty` (default: `"marketplaceChannel"`) and it has to be picked up by the gradle task `publishPlugin` in `build.gradle.kts`.
 
-The code 
+The code
 ```java
 publishPlugin {
     token(System.getenv("PUBLISH_TOKEN"))
@@ -218,7 +218,7 @@ publishPlugin {
 }
 ```
 
-additionally the line 
+additionally the line
 ```
 val marketplaceChannel: String by project
 ```
@@ -257,7 +257,7 @@ To set the correct `java` version, use the following:
 
 **gradle**
 
-Additional caching of gradle is advised. 
+Additional caching of gradle is advised.
 Also, (and only on GitHub Actions) the use of the [`Gradle Wrapper Validation Action`](https://github.com/marketplace/actions/gradle-wrapper-validation)
 is advised to ensure only official versions of `graldew` are checked in.
 
@@ -280,7 +280,7 @@ is advised to ensure only official versions of `graldew` are checked in.
     path: ~/.gradle/wrapper
     key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
 ```
-  
+
 ### AppVeyor
 
 **operating systems**
