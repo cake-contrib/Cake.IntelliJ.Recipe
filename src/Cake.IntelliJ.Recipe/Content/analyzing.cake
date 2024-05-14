@@ -12,9 +12,7 @@ BuildParameters.Tasks.AnalyzeTask = Task("IntelliJAnalyze")
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
-        .WithTask("detekt")
-        .WithTask("ktlintCheck")
-        .WithTask("verifyPlugin")
+        .WithTask(IntelliJBuildParameters.IntelliJAnalyzerTasks)
         .Run();
 });
 
