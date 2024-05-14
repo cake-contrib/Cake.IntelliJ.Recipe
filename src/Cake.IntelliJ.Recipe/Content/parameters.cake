@@ -16,6 +16,7 @@ public static class IntelliJBuildParameters
     public static FilePath IntegrationTestScriptPath { get; private set; }
     public static IntelliJBuildTasks Tasks { get; private set; }
     public static IntelliJBuildPaths Paths { get; private set; }
+    public static bool ShouldRunPluginVerifier { get; private set; }
     static IntelliJBuildParameters()
     {
         Tasks = new IntelliJBuildTasks();
@@ -38,6 +39,7 @@ public static class IntelliJBuildParameters
         context.Information("ShouldPublishPluginCiBuilds: {0}", ShouldPublishPluginCiBuilds);
         context.Information("PluginChannelGradleProperty: {0}", PluginChannelGradleProperty);
         context.Information("PluginVersionGradleProperty: {0}", PluginVersionGradleProperty);
+        context.Information("ShouldRunPluginVerifier: {0}", ShouldRunPluginVerifier);
     }
 
     public static void SetParameters(
@@ -118,7 +120,8 @@ public static class IntelliJBuildParameters
         string marketplaceId = null,
         GradleLogLevel gradleVerbosity = GradleLogLevel.Default,
         DirectoryPath pluginBuildOutputPath = null,
-        DirectoryPath pluginPackOutputPath = null
+        DirectoryPath pluginPackOutputPath = null,
+        bool shouldRunPluginVerifier = true
         )
     {
         if (context == null)
@@ -227,5 +230,6 @@ public static class IntelliJBuildParameters
         PluginChannelGradleProperty = pluginChannelGradleProperty;
         PluginVersionGradleProperty = pluginVersionGradleProperty;
         Paths = IntelliJBuildPaths.GetPaths(context);
+        ShouldRunPluginVerifier = shouldRunPluginVerifier;
     }
 }

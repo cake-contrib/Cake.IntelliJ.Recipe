@@ -21,6 +21,7 @@ BuildParameters.Tasks.AnalyzeTask = Task("IntelliJAnalyze")
 
 IntelliJBuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
     .IsDependentOn("IntelliJBuild")
+    .WithCriteria(() => IntelliJBuildParameters.ShouldRunPluginVerifier, "Plugin Verifier is disabled")
     .Does<BuildVersion>((context, buildVersion) =>
 {
        Gradle
