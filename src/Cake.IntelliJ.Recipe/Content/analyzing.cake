@@ -12,15 +12,14 @@ BuildParameters.Tasks.AnalyzeTask = Task("IntelliJAnalyze")
         .FromPath(BuildParameters.SourceDirectoryPath)
         .WithLogLevel(IntelliJBuildParameters.GradleVerbosity)
         .WithProjectProperty("pluginVersion", buildVersion.SemVersion)
-        .WithTask("detekt")
-        .WithTask("ktlintCheck")
-        .WithTask("verifyPlugin")
+        .WithTask(IntelliJBuildParameters.IntelliJAnalyzerTasks)
         .Run();
 });
 
 
 IntelliJBuildParameters.Tasks.RunPluginVerifierTask = Task("Run-Plugin-Verifier")
     .IsDependentOn("IntelliJBuild")
+    .WithCriteria(() => IntelliJBuildParameters.ShouldRunPluginVerifier, "Plugin Verifier is disabled")
     .Does<BuildVersion>((context, buildVersion) =>
 {
        Gradle

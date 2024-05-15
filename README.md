@@ -9,25 +9,35 @@ Convention based Cake scripts for building IntelliJ plugins.
 
 ## Table of Contents
 
-- [Install](#install)
-- [Usage](#usage)
-- [Discussion](#discussion)
-- [Settings](#settings)
-  - [Publishing](#publishing)
-  - [Marketplace-ID](#marketplace-id)
-  - [Grade-Verbosity](#grade-verbosity)
-  - [Channels](#channels)
-- [Changes to the template](#changes-to-the-template)
-  - [Readme](#user-content-readme)
-  - [Changelog](#user-content-changelog)
-  - [Releases and PreReleases](#releases-and-prereleases)
-- [CI Systems](#ci-systems)
-  - [GitHub Actions](#github-actions)
-  - [AppVeyor](#appveyor)
-- [Maintainer](#maintainer)
-- [Contributing](#contributing)
-  - [Contributors](#contributors)
-- [License](#license)
+- [Cake.IntelliJ.Recipe](#cakeintellijrecipe)
+  - [Table of Contents](#table-of-contents)
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Discussion](#discussion)
+  - [Settings](#settings)
+    - [Analyze](#analyze)
+    - [Channels](#channels)
+    - [Grade-Verbosity](#grade-verbosity)
+    - [Marketplace-ID](#marketplace-id)
+    - [PluginVerifier](#pluginverifier)
+    - [Publishing](#publishing)
+  - [Changes to the template](#changes-to-the-template)
+    - [Readme](#readme)
+    - [Changelog](#changelog)
+    - [Releases and PreReleases](#releases-and-prereleases)
+  - [CI Systems](#ci-systems)
+    - [GitHub Actions](#github-actions)
+      - [operating systems](#operating-systems)
+      - [java version](#java-version)
+      - [gradle](#gradle)
+    - [AppVeyor](#appveyor)
+      - [operating systems](#operating-systems-1)
+      - [java version](#java-version-1)
+      - [gradle](#gradle-1)
+  - [Maintainer](#maintainer)
+  - [Contributing](#contributing)
+    - [Contributors](#contributors)
+  - [License](#license)
 
 ## Install
 
@@ -69,14 +79,22 @@ If you have questions, search for an existing one, or create a new discussion on
 
 ## Settings
 
-### Publishing
+### Analyze
 
-To publish the plugin to the [JetBrains Marketplace](https://plugins.jetbrains.com/) a [token](https://plugins.jetbrains.com/author/me/tokens) is required.
-The token must be supplied in an environment variable and then picked up in the `gradle` build.
-Default for plugins created from https://github.com/JetBrains/intellij-platform-plugin-template is to use the `PUBLISH_TOKEN` variable name.
+The Cake target `IntelliJAnalyze` is run on every build and is used to run code analysis.
 
-Also, as with the "normal" gradle-based publishing, the first publish of the plugin must be made manually.
+The default in this target is to run the following gradle tasks:
+`detekt`, `ktlintCheck`, and `verifyPlugin`.
 
+If for some reason this should be changed (e.g. for plugins that do not use detekt and ktlint but rather depend on something different),
+the tasks to invoke can be configured using the `intelliJAnalyzerTasks` setting.
+
+```csharp
+IntelliJBuildParameters.SetParameters(
+  // ... all other parameters ...
+  intelliJAnalyzerTasks: new[]{ "check", "verifyPlugin" }
+);
+```
 ### Channels
 
 Settings with regard to publishing channels are:
@@ -89,6 +107,13 @@ Settings with regard to publishing channels are:
 
 See [Releases and PreReleases](#releases-and-prereleases) for their meaning.
 
+### Grade-Verbosity
+
+The verbosity of running gradle has it's own setting: `gradleVerbosity`. (Default is set to `GradleLogLevel.Default`)
+
+Keep in mind, that while setting Cake verbosity to `diagnostic`, secrets will still be secret.
+However, setting gradle verbosity to `GradleLogLevel.Debug` will print out all secrets in the logs.
+
 ### Marketplace-ID
 
 When publishing is automated, Twitter and Gitter messages can be created. To have them link to the plugin-page in the marketplace,
@@ -96,12 +121,30 @@ a setting of `marketplaceId` is needed. The `marketplaceId` can be fetched from 
 
 All other settings for Twitter, Gitter and such follow [Cake.Recipe](https://cake-contrib.github.io/Cake.Recipe/docs/fundamentals/environment-variables#twitter).
 
-### Grade-Verbosity
+### PluginVerifier
 
-The verbosity of running gradle has it's own setting: `gradleVerbosity`. (Default is set to `GradleLogLevel.Default`)
+The gradle task `runPluginVerifier` runs the [JetBrains plugin verifier](https://github.com/JetBrains/intellij-plugin-verifier).
+This task is "mapped" to the Cake target `Run-Plugin-Verifier` which runs on `CI` builds.
+If running on CI builds is not desired for any reason, the setting `shouldRunPluginVerifier` can be used to disable the run.
 
-Keep in mind, that while setting Cake verbosity to `diagnostic`, secrets will still be secret.
-However, setting gradle verbosity to `GradleLogLevel.Debug` will print out all secrets in the logs.
+
+Example: Do not run the plugin verifier, if the build runs on Linux (e.g. beacuse the GitHub actions Linux runner does not have enough
+free space for the plugin verifier.)
+
+```csharp
+IntelliJBuildParameters.SetParameters(
+  // ... all other parameters ...
+  shouldRunPluginVerifier: !IsRunningOnLinux()
+);
+```
+
+### Publishing
+
+To publish the plugin to the [JetBrains Marketplace](https://plugins.jetbrains.com/) a [token](https://plugins.jetbrains.com/author/me/tokens) is required.
+The token must be supplied in an environment variable and is then picked up in the `gradle` build.
+Default for plugins created from https://github.com/JetBrains/intellij-platform-plugin-template is to use the `PUBLISH_TOKEN` variable name.
+
+Also, as with the "normal" gradle-based publishing, the first publish of the plugin must be made manually.
 
 ## Changes to the template
 
